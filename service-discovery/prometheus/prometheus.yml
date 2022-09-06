@@ -1,0 +1,32 @@
+# https://prometheus.io/docs/prometheus/latest/configuration/configuration/#consul_sd_config
+# https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+# https://backbeat.tech/blog/configuring-prometheus-targets-with-consul
+
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+
+  external_labels:
+    monitor: 'prometheus-monitor'
+
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'consul'
+    metrics_path: '/actuator/prometheus'
+    relabel_configs:
+        # application label rewrite for jvm grafana dashboard 4701 https://grafana.com/grafana/dashboards/4701
+      - source_labels: ['__meta_consul_service']
+        target_label: application
+      - source_labels: ['__meta_consul_service_address']
+        target_label: host
+    consul_sd_configs:
+      - server: localhost:8500
+        tags:
+          - prometheus

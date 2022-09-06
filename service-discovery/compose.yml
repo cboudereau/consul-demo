@@ -1,0 +1,95 @@
+# keep version only for graphviz
+version: '3.8'
+services:
+  consul-server:
+    image: hashicorp/consul:1.13.1
+    restart: always
+    volumes:
+     - ./consul.d/server/server.json:/consul/config/server.json:ro
+    networks:
+      - bridge
+    ports:
+      - 8500:8500
+    command: "agent"
+
+  service:
+    build: 
+      context: ./service
+    deploy:
+      replicas: 4
+    networks:
+      - bridge
+    environment:
+      - CONSUL_ARGS=-retry-join consul-server
+      - SERVICE_NAME=users-service
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - OTEL_METRICS_EXPORTER=none
+    depends_on:
+      - consul-server
+      - loki
+      - tempo
+
+  client:
+    build: 
+      context: ./client
+    networks:
+      - bridge
+    environment:
+      - CONSUL_ARGS=-retry-join consul-server
+      - SERVICE_NAME=client
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - OTEL_METRICS_EXPORTER=none
+    ports:
+      - 8080:8080
+    depends_on:
+      - consul-server
+      - loki
+      - tempo
+      - service
+
+  prometheus:
+    build: 
+      context: ./prometheus
+    networks:
+      - bridge
+    environment:
+      - CONSUL_ARGS=-retry-join consul-server
+      - SERVICE_NAME=prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - 9090:9090
+    depends_on:
+      - consul-server
+
+  loki:
+    image: grafana/loki:2.6.1
+    networks:
+      - bridge
+
+  tempo:
+    image: grafana/tempo:1.5.0
+    volumes:
+      - ./tempo/tempo-local.yaml:/etc/tempo.yaml:ro
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    networks:
+      - bridge
+
+  grafana:
+    image: grafana/grafana-oss:9.1.1
+    ports:
+      - 3000:3000
+    networks:
+      - bridge
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./grafana/provisioning/:/etc/grafana/provisioning/:ro
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+
+networks:
+  bridge:
