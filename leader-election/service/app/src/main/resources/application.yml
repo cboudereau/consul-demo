@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: app
+  cloud:
+    consul:
+      host: localhost
+      discovery:
+        query-passing: true
+        prefer-ip-address: true
+        tags: batch
+
+logging:
+  level:
+    root: INFO

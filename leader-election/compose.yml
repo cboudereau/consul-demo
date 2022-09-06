@@ -1,0 +1,99 @@
+# keep version only for graphviz
+version: '3.8'
+
+services:
+  consul-server-1:
+    image: hashicorp/consul:1.13.1
+    restart: always
+    cap_add:
+     - ALL
+    volumes:
+     - ./consul.d/server/server.json:/consul/config/server.json:ro
+    networks:
+      - backend
+    command: "agent -node consul-server-1 -bootstrap-expect 4 -retry-join consul-server-2 -retry-join consul-server-3 -retry-join consul-server-4"
+
+  consul-server-2:
+    image: hashicorp/consul:1.13.1
+    restart: always
+    volumes:
+     - ./consul.d/server/server.json:/consul/config/server.json:ro
+    networks:
+      - backend
+    command: "agent -node consul-server-2 -bootstrap-expect 4 -retry-join consul-server-1 -retry-join consul-server-3 -retry-join consul-server-4"
+
+  consul-server-3:
+    image: hashicorp/consul:1.13.1
+    restart: always
+    volumes:
+     - ./consul.d/server/server.json:/consul/config/server.json:ro
+    networks:
+      - backend
+    command: "agent -node consul-server-3 -bootstrap-expect 4 -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-4"
+
+  consul-server-4:
+    image: hashicorp/consul:1.13.1
+    restart: always
+    volumes:
+     - ./consul.d/server/server.json:/consul/config/server.json:ro
+    networks:
+      - backend
+    command: "agent -node consul-server-4 -bootstrap-expect 4 -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3"
+
+  lb:
+    image: nginx:1.23.1
+    networks:
+      - frontend
+      - backend
+    ports:
+      - 8500:8500
+    volumes:
+      - ./nginx.d/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - consul-ui-only
+
+  consul-ui-only:
+    image: hashicorp/consul:1.13.1
+    deploy:
+      replicas: 2
+    networks:
+      - backend
+    volumes:
+      - ./consul-ui.d/docker-entrypoint.sh:/docker-entrypoint.sh:ro
+    command: /docker-entrypoint.sh
+    depends_on:
+      - consul-server-1
+      - consul-server-2
+      - consul-server-3
+      - consul-server-4
+
+  init-dc:
+    image: hashicorp/consul:1.13.1
+    networks:
+      - backend
+    volumes:
+      - ./init-dc.d/docker-entrypoint.sh:/docker-entrypoint.sh:ro
+    command: /docker-entrypoint.sh
+    depends_on:
+      - consul-server-1
+      - consul-server-2
+      - consul-server-3
+      - consul-server-4
+
+  service:
+    build: 
+      context: ./service/app
+    deploy:
+      replicas: 2
+    networks:
+      - backend
+    environment:
+      - CONSUL_ARGS=-log-level info -log-json -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3 -retry-join consul-server-4
+      - SERVICE_NAME=app
+      # - IS_LEADER=false
+    depends_on:
+      - init-dc
+
+networks:
+  backend:
+  frontend:

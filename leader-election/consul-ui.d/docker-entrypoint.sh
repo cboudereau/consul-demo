@@ -1,0 +1,2 @@
+#!/bin/sh
+consul agent -node consul-ui-$(hostname) -client 0.0.0.0 -data-dir /consul/data -ui -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3 -retry-join consul-server-4
