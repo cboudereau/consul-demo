@@ -1,0 +1,66 @@
+<html>
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/blood.min.css" id="theme">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/base16/monokai.min.css">
+
+
+</head>
+<body>
+	
+    <div class="reveal">
+		<div class="slides">
+            <section data-markdown>
+                <textarea data-template>
+                  ## hashicorp/consul
+                  What it is all about ?
+                  ---
+                  ## Consul is ...
+                  https://learn.hashicorp.com/tutorials/consul/get-started#what-is-a-service-mesh
+                  > A service mesh is a dedicated layer that provides secure service-to-service communication for on-prem, cloud, or multi-cloud infrastructure. Service meshes are often used with a microservice architectural pattern, but can provide value in any scenario where complex networking is involved.
+                  ---
+                  ## Services offered by consul
+                  - Service Discovery
+                  - Service Configuration (Key/Value store)
+                  - Service mesh
+                  - Session lock (leader election)
+                  - Secure communication (mTLS + secure gossip encryption)
+                  - ... and many more
+                  ---
+                  ## Consul properties
+                  - Robust
+                  - Consistent
+                  - Distributed
+                </textarea>
+            </section>
+            <section>
+                <h2>Official consul intro</h2>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/mxeMdl0KvBI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>    
+                https://www.youtube.com/embed/mxeMdl0KvBI
+            </section>
+            <section>
+                Live demo
+            </section>
+        </div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/markdown/markdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+
+	<script>
+		Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            plugins: [ RevealMarkdown, RevealNotes, RevealHighlight ],
+            slideNumber: true,
+            autoAnimate: false,
+            transition: 'none'
+        });
+	</script>
+
+</body>
+</html>
