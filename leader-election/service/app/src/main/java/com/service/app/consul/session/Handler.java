@@ -1,7 +1,7 @@
 package com.service.app.consul.session;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 @FunctionalInterface
-public interface Handler<T> extends Function<T, Optional<HandlerStatus>> { }
+public interface Handler<T> extends Supplier<Optional<Optional<T>>> { }

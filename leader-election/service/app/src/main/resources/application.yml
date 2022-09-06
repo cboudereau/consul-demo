@@ -15,3 +15,4 @@ spring:
 logging:
   level:
     root: INFO
+    com.service.app.consul: DEBUG

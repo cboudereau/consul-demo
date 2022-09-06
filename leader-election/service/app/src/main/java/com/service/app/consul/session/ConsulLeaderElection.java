@@ -2,6 +2,7 @@ package com.service.app.consul.session;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -21,18 +22,18 @@ public final class ConsulLeaderElection<T> implements Handler<T> {
     private final ConsulClient cc;
     private final String service;
     private final String leaderKey;
-    private final Handler<T> handler;
+    private final Supplier<T> supplier;
     private final NewSession newSession;
     
     private String sessionId = null;
     private List<String> checkIds = null;
     
-    public ConsulLeaderElection(ConsulClient cc, String service, long lockDelayInSecond, Handler<T> handler) {
+    public ConsulLeaderElection(ConsulClient cc, String service, long lockDelayInSecond, Supplier<T> handler) {
         this.newSession = new NewSession();
         this.newSession.setLockDelay(lockDelayInSecond);
         this.cc = cc;
         this.service = service;
-        this.handler = handler;
+        this.supplier = handler;
         this.leaderKey = String.format("%s/leader", service);
     }
 
@@ -48,45 +49,45 @@ public final class ConsulLeaderElection<T> implements Handler<T> {
     }
     
     @Override
-    public Optional<HandlerStatus> apply(T input) {
-        logger.info("starting leader election consul based");
+    public Optional<Optional<T>> get() {
+        logger.debug("starting leader election consul based");
         try {
             if (checkIds == null) {
                 List<String> checkIdResult = cc.getAgentChecks().getValue().values().stream().filter(x -> x.getServiceName().equals(service)).map(x -> x.getCheckId()).collect(Collectors.toList());
                 if (checkIdResult.isEmpty()) {
                     logger.warn("empty {} agent service checks returned, awaiting service and health checks registration", service);
-                    return Optional.empty();
+                    return Optional.of(Optional.empty());
                 }
                 checkIdResult.add("serfHealth");
                 checkIds = checkIdResult;
                 
-                logger.info("setting up session health checks {}", checkIds);
+                logger.debug("setting up session health checks {}", checkIds);
                 newSession.setChecks(checkIds);
             }
             
             sessionId = Optional.ofNullable(sessionId)
                 .flatMap(x -> renewSession(cc, x)).map(sId -> {
-                    logger.info("{}: session renewed", sId);
+                    logger.debug("{}: session renewed", sId);
                     return sId;
                 })
                 .orElseGet(() -> {
                     String sId = cc.sessionCreate(newSession, QueryParams.DEFAULT).getValue();
-                    logger.info("{}: session created", sId);
+                    logger.debug("{}: session created", sId);
                     return sId;
                 });
 
             PutParams acquireSessionParams = new PutParams();
             acquireSessionParams.setAcquireSession(sessionId);
             if (cc.setKVValue(leaderKey, sessionId, acquireSessionParams).getValue()) {
-                logger.info("{}: leader", service);
-                return this.handler.apply(input);
+                logger.debug("{}: leader", service);
+                return Optional.of(Optional.of(this.supplier.get()));
             } 
-            logger.info("{}: not leader", service);
-            return Optional.of(HandlerStatus.UNHANDLED);
+            logger.debug("{}: not leader", service);
+            return Optional.of(Optional.empty());
         } 
         catch (ConsulException e) {
             logger.error("error while managing leader", e);
-            return Optional.of(HandlerStatus.UNHANDLED);
+            return Optional.of(Optional.empty());
         }
     }
 }

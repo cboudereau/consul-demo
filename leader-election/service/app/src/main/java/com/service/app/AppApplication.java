@@ -4,8 +4,6 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
@@ -18,9 +16,7 @@ import com.ecwid.consul.v1.OperationException;
 import com.service.app.consul.session.CompositeLeaderElection;
 import com.service.app.consul.session.ConsulLeaderElection;
 import com.service.app.consul.session.Handler;
-import com.service.app.consul.session.HandlerStatus;
 import com.service.app.consul.session.ManualLeaderElection;
-import com.service.app.consul.session.UnhandledAwaiter;
 
 @SpringBootApplication
 public class AppApplication {
@@ -55,42 +51,33 @@ public class AppApplication {
 	
 		private static final Logger logger = LoggerFactory.getLogger(Batch.class);	
 
-		private static final void process(String connectionString, String input) throws InterruptedException {
-			logger.info("processing batch using {} connection string and input {}", connectionString, input);
-			TimeUnit.SECONDS.sleep(5);
+		private static final String process(String connectionString) {
+			logger.info("processing batch using {} connection string", connectionString);
 			logger.info("batch processed");
+			return "batch succeed";
 		}
 	
-		public static final void run() {
+		public static final void run() throws InterruptedException {
 			String service = System.getenv("SERVICE_NAME");
 			logger.info("starting {}", service);
 			ConsulClient cc = new ConsulClient();
 
-			BiConsumer<String, String> safeProcess = (String connectionString, String input) -> {
-				try {
-					process(connectionString, input);
-				} catch (InterruptedException e) {
-					logger.error("safeProcess interrupted", e);
-				}
-			};
-
-			Handler<String> manualLeader = new ManualLeaderElection<>((input) -> safeProcess.accept("conf", input));
+			Handler<String> manualLeader = new ManualLeaderElection<>(() -> process("conf"));
 			Supplier<Optional<String>> consulConf = new ConsulKVSybaseConfiguration(cc);
 			
-			Handler<String> consulLeader = new ConsulLeaderElection<>(cc, service, 10, (input) -> {
+			Handler<String> consulLeader = new ConsulLeaderElection<>(cc, service, 10, () -> {
 				Optional<String> connectionString = consulConf.get();
 				if (connectionString.isEmpty()) {
 					logger.warn("connection string is empty");
-					return Optional.of(HandlerStatus.UNHANDLED);
+					return null;
 				}
-				safeProcess.accept(connectionString.get(), input);
-				return Optional.of(HandlerStatus.HANDLED);
+				return process(connectionString.get());
 			});
-
-			Consumer<String> runner = new CompositeLeaderElection<>(Arrays.asList(new UnhandledAwaiter<>(5, manualLeader), new UnhandledAwaiter<>(5, consulLeader)));
+			Supplier<Optional<String>> supplier = new CompositeLeaderElection<>(Arrays.asList(manualLeader, consulLeader));
 
 			while (true) {
-				runner.accept("batch input");;
+				logger.info("batch: {}", supplier.get() );
+				TimeUnit.SECONDS.sleep(5);
 			}
 		}
 	}

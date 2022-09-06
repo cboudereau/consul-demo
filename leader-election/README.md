@@ -40,7 +40,7 @@ After the service health check has been in CRITICAL stauts, the next instance is
 
 Start java app (old leader)
 ```bash
-dumb-init java -jar /app/app.jar &
+dumb-init java -jar /app/app.jar
 ```
 
 Kill consul agent
@@ -50,7 +50,7 @@ killall -9 consul
 
 Start again consul agent
 ```bash
-consul agent -data-dir /consul/data -node ${SERVICE_NAME}-$(hostname) ${CONSUL_ARGS} &
+consul agent -data-dir /consul/data -node ${SERVICE_NAME}-$(hostname) ${CONSUL_ARGS}
 ```
 
 Kill/Start consul-server leader
