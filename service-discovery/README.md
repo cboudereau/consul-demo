@@ -31,33 +31,64 @@ docker stop service-discovery-service-<id of the service>
 
 Check services in consul
 
-Stop the java app
+Exec supervisorctl on service-1
 ```bash
-docker compose exec --index 1 service killall dumb-init java
+docker compose exec -it --index 1 service supervisorctl
 ```
 
-List processes
+Status
 ```bash
-docker compose exec --index 1 service ps
+status
+```
+
+Health check demo
+```bash
+stop app
+```
+
+Start the container
+```bash
+docker start service-discovery-service-1
+```
+
+```bash
+docker compose exec -it --index 1 service supervisorctl
+```
+
+The container is exited to be sure that both consul and app are up an running.
+
+Stop the healthcheck for the demo
+```bash
+stop healthcheck
+```
+
+Stop the java app
+```bash
+stop app
+```
+
+Status
+```bash
+status
 ```
 
 Check that the service has been gracefully deregistered from [consul nodes](http://localhost:8500/ui/dc1/services/users-service/instances) (only 3 of 4 services listed in the console)
 
 Restart the service again
 ```bash
-docker restart service-discovery-service-1
+start app
 ```
 
 Kill the java app
 ```bash
-docker compose exec --index 1 service killall -9 dumb-init java
+signal SIGKILL app
 ```
 
 Check that the service health check is down in the [consul console](http://localhost:8500/ui/dc1/services/users-service/instances)
 
 Restart the service again
 ```bash
-docker restart service-discovery-service-1
+start app
 ```
 
 Check that the failing health check is up in the [console](http://localhost:8500/ui/dc1/services/users-service/instances)
