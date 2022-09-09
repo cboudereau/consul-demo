@@ -28,29 +28,72 @@ The lock is released since the (consul agent) serf Health check is ko.
 
 Exec into the leader
 ```bash
-docker compose exec -it --index 1 service sh
+docker compose exec -it --index 1 service supervisorctl
+```
+
+Status
+```bash
+status
+```
+
+Health check demo
+```bash
+stop app
+```
+
+Start the container
+```bash
+docker start leader-election-service-1
+```
+
+```bash
+docker compose exec -it --index 1 service supervisorctl
+```
+
+The container is exited to be sure that both consul and app are up an running.
+
+Stop the healthcheck for the demo
+```bash
+stop healthcheck
 ```
 
 Kill java app (leader)
 ```bash
-killall -9 java dumb-init
+signal SIGKILL app
 ```
 
 After the service health check has been in CRITICAL stauts, the next instance is elected
 
 Start java app (old leader)
 ```bash
-dumb-init java -jar /app/app.jar
+start app
 ```
 
 Kill consul agent
 ```bash
-killall -9 consul
+signal SIGKILL consul
 ```
 
 Start again consul agent
 ```bash
-consul agent -data-dir /consul/data -node ${SERVICE_NAME}-$(hostname) ${CONSUL_ARGS}
+start consul
+```
+
+Service deregistration
+```bash
+stop consul
+```
+
+```bash
+start consul
+```
+
+```bash
+stop app
+```
+
+```bash
+start app
 ```
 
 Kill/Start consul-server leader

@@ -1,3 +1,15 @@
+FROM openjdk:17-alpine as jdk
+# required for strip-debug to work
+RUN apk add --no-cache binutils
+RUN $JAVA_HOME/bin/jlink \
+         --verbose \
+         --add-modules ALL-MODULE-PATH \
+         --strip-debug \
+         --no-man-pages \
+         --no-header-files \
+         --compress=2 \
+         --output /jre-lightweight
+
 FROM openjdk:17-alpine as build
 WORKDIR /app
 COPY .mvn/ .mvn
@@ -9,15 +21,26 @@ COPY src ./src
 RUN ./mvnw -o package -DskipTests
 
 FROM hashicorp/consul:1.13.1 as consul
-FROM openjdk:17-alpine
+FROM alpine:3.16
+
+RUN apk add --no-cache supervisor
+
+ENV JAVA_HOME=/jre
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+COPY --from=jdk /jre-lightweight $JAVA_HOME
+
+ARG APPLICATION_USER=appuser
+RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
+
+USER 1000
 WORKDIR /app
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
 
-COPY --from=consul /bin/consul /bin/consul
-COPY ./docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+COPY --chown=1000:1000 --from=consul /bin/consul /app/consul
 
-COPY --from=build /app/target/app-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --chown=1000:1000 ./supervisord.conf /app/supervisord.conf
+COPY --chown=1000:1000 ./supervisor.d/ /app/supervisor.d/
 
-CMD ["/docker-entrypoint.sh"]
+COPY --chown=1000:1000 --from=build /app/target/app-0.0.1-SNAPSHOT.jar /app/app.jar
+
+EXPOSE 8080
+CMD ["/usr/bin/supervisord", "-n"]
