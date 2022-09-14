@@ -20,13 +20,17 @@ docker compose down --remove-orphans -v --rmi local && docker compose up
 Spawn 4 services and call multiple times the client service and observer the round robin in the service logs
 
 ```bash
-watch -n 0.5 -b -d -- curl http://localhost:8080/hello
+watch -n 0.5 -d -- curl http://localhost:8080/hello
 ```
 
 Stop services and observer the failover (watch command)
 
 ```bash
-docker stop service-discovery-service-<id of the service>
+docker stop service-discovery-service-1
+```
+
+```bash
+docker start service-discovery-service-1
 ```
 
 Check services in consul
