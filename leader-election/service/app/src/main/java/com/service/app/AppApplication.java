@@ -76,7 +76,7 @@ public class AppApplication {
 			Supplier<Optional<String>> supplier = new CompositeLeaderElection<>(Arrays.asList(manualLeader, consulLeader));
 
 			while (true) {
-				logger.info("batch: {}", supplier.get() );
+				supplier.get().ifPresent(x -> logger.info("batch: {}", x));
 				TimeUnit.SECONDS.sleep(5);
 			}
 		}
