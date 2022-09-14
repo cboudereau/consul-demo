@@ -14,7 +14,7 @@ public final class ManualLeaderElection<T> implements Handler<T> {
     }
 
     @Override
-    public Optional<Optional<T>> get() {
+    public final Optional<Optional<T>> get() {
         Optional<String> isLeaderForced = Optional.ofNullable(System.getenv("IS_LEADER"));
                 
         if (!isLeaderForced.isPresent()) {

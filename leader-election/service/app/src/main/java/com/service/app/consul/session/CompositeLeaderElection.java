@@ -16,7 +16,7 @@ public final class CompositeLeaderElection<T> implements Supplier<Optional<T>> {
     }
 
     @Override
-    public Optional<T> get() {
+    public final Optional<T> get() {
         Optional<Optional<T>> result = this.handlers.stream().map(x -> x.get()).filter(x -> x.isPresent()).findFirst().orElse(Optional.empty());
         if(result.isEmpty()){
             logger.warn("leader election implementation not found");

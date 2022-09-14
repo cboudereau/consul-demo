@@ -37,7 +37,7 @@ public final class ConsulLeaderElection<T> implements Handler<T> {
         this.leaderKey = String.format("%s/leader", service);
     }
 
-    private static Optional<String> renewSession(ConsulClient cc, String sessionId) {
+    private final static Optional<String> renewSession(ConsulClient cc, String sessionId) {
         try {
             return Optional.ofNullable(cc.renewSession(sessionId, QueryParams.DEFAULT))
                 .flatMap(x -> Optional.ofNullable(x.getValue()))
@@ -49,7 +49,7 @@ public final class ConsulLeaderElection<T> implements Handler<T> {
     }
     
     @Override
-    public Optional<Optional<T>> get() {
+    public final Optional<Optional<T>> get() {
         logger.debug("starting leader election consul based");
         try {
             if (checkIds == null) {

@@ -34,7 +34,7 @@ public class AppApplication {
 			}
 	
 			@Override
-			public Optional<String> get() {
+			public final Optional<String> get() {
 				try {
 					String sybase_dc = cc.getKVValue("sybase/dc").getValue().getDecodedValue();
 					Optional<String> connectionString = Optional.ofNullable(cc.getKVValue(String.format("sybase/%s/connectionString", sybase_dc)).getValue()).map (x -> x.getDecodedValue());
