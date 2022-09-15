@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+logging:
+  level: 
+    root: INFO
+    com.service.app.consul.session: DEBUG
+    org.springframework.jdbc.core: TRACE
+
+spring:
+  application:
+    name: app
+  cloud:
+    consul:
+      host: localhost
+      discovery:
+        query-passing: true
+        prefer-ip-address: true
+        tags: batch
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus 
+    jmx:
+      exposure:
+        include: '*'
