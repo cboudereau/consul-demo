@@ -1,6 +1,7 @@
 package com.service.app.consul.session;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class LeaderElectionTest {
     }
     @Test
     public void TestLeaderElectionUsingConsul() {
+        assertNotNull(new LeaderElection());
         assertEquals(Optional.empty(), LeaderElection.build(new NoHealthChecksConsulClientMock(), "service", 1, () -> "hello").get());
     }
 }
