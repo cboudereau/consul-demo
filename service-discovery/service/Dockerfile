@@ -29,9 +29,6 @@ ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 COPY --from=jdk /jre-lightweight $JAVA_HOME
 
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_x86_64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
-
 ARG APPLICATION_USER=appuser
 RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
 
