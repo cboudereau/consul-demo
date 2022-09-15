@@ -18,7 +18,7 @@ RUN chmod +x mvnw
 RUN ./mvnw dependency:resolve dependency:go-offline -B 
 
 COPY src ./src
-RUN ./mvnw -o package -DskipTests
+RUN ./mvnw -o package
 
 FROM hashicorp/consul:1.13.1 as consul
 FROM alpine:3.16
