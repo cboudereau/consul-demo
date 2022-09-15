@@ -8,7 +8,7 @@ docker compose down --remove-orphans -v --rmi local && docker compose up
 
 Analyze the database
 ```bash
-docker compose exec -it database psql -Upostgres
+docker compose exec -it database psql -Upostgres -dorders
 ```
 
 List databases
