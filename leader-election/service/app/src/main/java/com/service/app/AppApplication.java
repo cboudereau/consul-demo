@@ -62,7 +62,7 @@ public class AppApplication {
 			logger.info("starting {}", service);
 			ConsulClient cc = new ConsulClient();
 
-			Handler<String> manualLeader = new ManualLeaderElection<>(() -> process("conf"));
+			Handler<String> manualLeader = new ManualLeaderElection<>(() -> process("conf"), ManualLeaderElection.getConfiguration());
 			Supplier<Optional<String>> consulConf = new ConsulKVSybaseConfiguration(cc);
 			
 			Handler<String> consulLeader = new ConsulLeaderElection<>(cc, service, 10, () -> {

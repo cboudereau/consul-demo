@@ -20,6 +20,7 @@ public final class CompositeLeaderElection<T> implements Supplier<Optional<T>> {
         Optional<Optional<T>> result = this.handlers.stream().map(x -> x.get()).filter(x -> x.isPresent()).findFirst().orElse(Optional.empty());
         if(result.isEmpty()){
             logger.warn("leader election implementation not found");
+            return Optional.empty();
         }
         return result.get();
     }
