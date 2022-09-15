@@ -8,19 +8,19 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-public class CompositeLeaderElectionTest {
+public final class CompositeLeaderElectionTest {
     @Test
-    public void ShouldReturnEmptyWhenNoHandlerIsGiven() {
+    public final void shouldReturnEmptyWhenNoHandlerIsGiven() {
         assertEquals(Optional.empty(), new CompositeLeaderElection<>(Collections.emptyList()).get());
     }
 
     @Test
-    public void ShouldReturnEmptyWhenNoAvailableHandlerIsGiven() {
+    public final void shouldReturnEmptyWhenNoAvailableHandlerIsGiven() {
         assertEquals(Optional.empty(), new CompositeLeaderElection<>(Arrays.asList(() -> Optional.empty())).get());
     }
 
     @Test
-    public void ShouldReturnTheFirstResultWhenMultipleAvailableHandlersIsGiven() {
+    public final void shouldReturnTheFirstResultWhenMultipleAvailableHandlersIsGiven() {
         Optional<String> expected = Optional.of("hello");
         Handler<String> candidate = () -> Optional.of(expected);
         Handler<String> shouldFail = () -> { throw new RuntimeException(); }; 

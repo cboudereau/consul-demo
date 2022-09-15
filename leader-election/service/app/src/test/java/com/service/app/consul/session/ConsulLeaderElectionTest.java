@@ -18,11 +18,11 @@ import com.ecwid.consul.v1.kv.model.PutParams;
 import com.ecwid.consul.v1.session.model.NewSession;
 import com.ecwid.consul.v1.session.model.Session;
 
-public class ConsulLeaderElectionTest {
+public final class ConsulLeaderElectionTest {
     static final class NoHealthChecksConsulClientMock extends ConsulClient {
 
         @Override
-        public Response<Map<String, Check>> getAgentChecks() {
+        public final Response<Map<String, Check>> getAgentChecks() {
             Map<String, Check> map = new HashMap<>();
             return new Response<Map<String,Check>>(map, 1L, true, 1L);
         }
@@ -30,7 +30,7 @@ public class ConsulLeaderElectionTest {
     }
 
     @Test
-    public void ShouldNotProcessWhenNoHealthChecksIsConfigured(){
+    public final void shouldNotProcessWhenNoHealthChecksIsConfigured(){
         assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new NoHealthChecksConsulClientMock(), "service", 1, () -> "hello").get());
     }
 
@@ -42,7 +42,7 @@ public class ConsulLeaderElectionTest {
             this.isLeader = isLeader;
         }
         @Override
-        public Response<Map<String, Check>> getAgentChecks() {
+        public final Response<Map<String, Check>> getAgentChecks() {
             HashMap<String, Check> map = new HashMap<>();
             Check value = new Check();
             value.setServiceName(service);
@@ -52,11 +52,11 @@ public class ConsulLeaderElectionTest {
             return new Response<Map<String,Check>>(map, 1L, true, 1L);
         }
         @Override
-        public Response<String> sessionCreate(NewSession newSession, QueryParams queryParams) {
+        public final Response<String> sessionCreate(NewSession newSession, QueryParams queryParams) {
             return new Response<String>("sessionId", 1L, true, 1L);
         }
         @Override
-        public Response<Boolean> setKVValue(String key, String value, PutParams putParams) {
+        public final Response<Boolean> setKVValue(String key, String value, PutParams putParams) {
             return new Response<Boolean>(this.isLeader, 1L, true, 1L);
         }
         @Override
@@ -68,20 +68,20 @@ public class ConsulLeaderElectionTest {
     }
 
     @Test
-    public void ShouldProcessWhenConsulAcceptsTheSessionLock() {
+    public final void shouldProcessWhenConsulAcceptsTheSessionLock() {
         String service = "service";
         String expected = "hello";
         assertEquals(Optional.of(Optional.of(expected)), new ConsulLeaderElection<>(new OkConsulClientMock(service, true), service, 1, () -> expected).get());
     }
 
     @Test
-    public void ShouldNotProcessWhenConsulRefusesTheSessionLock() {
+    public final void shouldNotProcessWhenConsulRefusesTheSessionLock() {
         String service = "service";
         assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new OkConsulClientMock(service, false), service, 1, () -> "hello").get());
     }
 
     @Test
-    public void ShouldProcessWhenConsulRenewsTheSessionLock() {
+    public final void shouldProcessWhenConsulRenewsTheSessionLock() {
         String service = "service";
         String expected = "hello";
         ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new OkConsulClientMock(service, true), service, 1, () -> expected);
@@ -91,17 +91,17 @@ public class ConsulLeaderElectionTest {
 
     static final class KoNotReadyConsulClientMock extends ConsulClient {
         @Override
-        public Response<Map<String, Check>> getAgentChecks() {
+        public final Response<Map<String, Check>> getAgentChecks() {
             throw new ConsulException("not ready");
         }
     }
 
     @Test
-    public void ShouldNotProcessWhenConsulFails() {
+    public final void shouldNotProcessWhenConsulFails() {
         assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new KoNotReadyConsulClientMock(), "service", 1, () -> "hello").get());
     }
 
-    class KoSessionClientMock extends OkConsulClientMock {
+    static final class KoSessionClientMock extends OkConsulClientMock {
         private int statusCode;
 
         public KoSessionClientMock(String service, boolean isLeader, int statusCode) {
@@ -110,13 +110,13 @@ public class ConsulLeaderElectionTest {
         }
 
         @Override
-        public Response<Session> renewSession(String session, QueryParams queryParams) {
+        public final Response<Session> renewSession(String session, QueryParams queryParams) {
             throw new OperationException(statusCode, "", "");
         }
     }
 
     @Test
-    public void ShouldProcessWhenConsulSessionIsRecreatedFails() {
+    public final void shouldProcessWhenConsulSessionIsRecreatedFails() {
         String expected = "hello";
         String service = "service";
         ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new KoSessionClientMock(service, true, 404), service, 1, () -> expected);
@@ -125,7 +125,7 @@ public class ConsulLeaderElectionTest {
     }
 
     @Test
-    public void ShouldNotProcessWhenConsulSessionIsRenewFails() {
+    public final void shouldNotProcessWhenConsulSessionIsRenewFails() {
         String expected = "hello";
         String service = "service";
         ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new KoSessionClientMock(service, true, 500), service, 1, () -> expected);
