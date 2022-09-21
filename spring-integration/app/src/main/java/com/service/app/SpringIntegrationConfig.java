@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 @DependsOn("dbConfig")
 @ImportResource("flow-config.xml")
 public class SpringIntegrationConfig {
-    public static class ConsulSourcePollingChannelAdapter extends SourcePollingChannelAdapter {
+    public static final class ConsulSourcePollingChannelAdapter extends SourcePollingChannelAdapter {
         private static final Logger logger = LoggerFactory.getLogger(ConsulSourcePollingChannelAdapter.class);
         private static final String service = System.getenv("SERVICE_NAME");
         
