@@ -1,6 +1,6 @@
 # spring-integration
 
-## Demo
+## Database intro
 
 ```bash
 docker compose down --remove-orphans -v --rmi local && docker compose up
@@ -35,6 +35,7 @@ List data
 ```sql
 SELECT * FROM orders;
 ```
+## Demo
 
 Observe the logs leader and stop it
 
@@ -48,7 +49,7 @@ docker start spring-integration-batch-<Id Of the leader>
 
 The lock is released since the (consul agent) serf Health check is ko.
 
-Exec into the leader
+Exec into the leader to manually stop/kill consul agent and/or the batch
 ```bash
 docker compose exec -it --index 1 batch supervisorctl
 ```
@@ -63,16 +64,24 @@ Health check demo
 stop app
 ```
 
+At this step, the container is in status exited since one of the supervisor program is down
+
+In the consul service dashboard, one service is down
+
 Start the container
 ```bash
 docker start spring-integration-batch-1
 ```
+
+Once the container is started it should be healthy in the consul console
 
 ```bash
 docker compose exec -it --index 1 batch supervisorctl
 ```
 
 The container is exited to be sure that both consul and app are up an running.
+
+Again, one service should be down and one up and running in consul
 
 Stop the healthcheck for the demo
 ```bash
@@ -84,7 +93,7 @@ Kill java app (leader)
 signal SIGKILL app
 ```
 
-After the service health check has been in CRITICAL stauts, the next instance is elected
+After the service health check has been in CRITICAL status, the next instance is elected
 
 Start java app (old leader)
 ```bash
@@ -96,10 +105,14 @@ Kill consul agent
 signal SIGKILL consul
 ```
 
+Here again a new leader is elected and one service is down in the consul console
+
 Start again consul agent
 ```bash
 start consul
 ```
+
+What about consul cluster resilience ? 
 
 Kill/Start consul-server leader
 ```bash
