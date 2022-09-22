@@ -51,7 +51,7 @@ public class AppApplication {
 	
 		private static final Logger logger = LoggerFactory.getLogger(Batch.class);	
 
-		private static final String process(String connectionString) {
+		private static final String process(final String connectionString) {
 			logger.info("processing batch using {} connection string", connectionString);
 			logger.info("batch processed");
 			return "batch succeed";

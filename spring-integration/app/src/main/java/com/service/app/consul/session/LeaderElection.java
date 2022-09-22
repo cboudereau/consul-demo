@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 import com.ecwid.consul.v1.ConsulClient;
 
 public final class LeaderElection {
-    public static final <T> Supplier<Optional<T>> build(ConsulClient consulClient, String service, int extraDelayInSecond, Supplier<T> supplier) {
+    public static final <T> Supplier<Optional<T>> build(final ConsulClient consulClient, final String service, final int extraDelayInSecond, final Supplier<T> supplier) {
         Handler<T> manualLeader = new ManualLeaderElection<>(supplier, ManualLeaderElection.getConfiguration());
         Handler<T> consulLeader = new ConsulLeaderElection<>(consulClient, service, extraDelayInSecond, supplier);
         return new CompositeLeaderElection<>(Arrays.asList(manualLeader, consulLeader));

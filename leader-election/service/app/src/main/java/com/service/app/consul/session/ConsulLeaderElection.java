@@ -28,7 +28,7 @@ public final class ConsulLeaderElection<T> implements Handler<T> {
     private String sessionId = null;
     private List<String> checkIds = null;
     
-    public ConsulLeaderElection(ConsulClient cc, String service, long lockDelayInSecond, Supplier<T> handler) {
+    public ConsulLeaderElection(final ConsulClient cc, final String service, final long lockDelayInSecond, final Supplier<T> handler) {
         this.newSession = new NewSession();
         this.newSession.setLockDelay(lockDelayInSecond);
         this.cc = cc;
@@ -37,7 +37,7 @@ public final class ConsulLeaderElection<T> implements Handler<T> {
         this.leaderKey = String.format("%s/leader", service);
     }
 
-    private final static Optional<String> renewSession(ConsulClient cc, String sessionId) {
+    private final static Optional<String> renewSession(final ConsulClient cc, final String sessionId) {
         try {
             return Optional.ofNullable(cc.renewSession(sessionId, QueryParams.DEFAULT))
                 .flatMap(x -> Optional.ofNullable(x.getValue()))

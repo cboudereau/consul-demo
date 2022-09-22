@@ -12,7 +12,7 @@ public class Consumer {
 
     private static final Logger logger = LoggerFactory.getLogger(Consumer.class);
 
-    public void handle(Message<OrderDto> message) {
+    public void handle(final Message<OrderDto> message) {
         OrderDto order = message.getPayload();
         logger.info("Consumer:{}/{}", order.getLabel(), order.getOrderId());
         try {

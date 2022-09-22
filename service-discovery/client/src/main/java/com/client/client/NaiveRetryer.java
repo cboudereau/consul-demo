@@ -8,7 +8,7 @@ import feign.Retryer;
 @Component
 public class NaiveRetryer implements feign.Retryer {
     @Override
-    public void continueOrPropagate(RetryableException e) {
+    public void continueOrPropagate(final RetryableException e) {
         try {
             System.out.println("retrying...");
             Thread.sleep(1000L);

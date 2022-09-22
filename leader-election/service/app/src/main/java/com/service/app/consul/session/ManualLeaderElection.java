@@ -15,7 +15,7 @@ public final class ManualLeaderElection<T> implements Handler<T> {
         return System.getenv("IS_LEADER");
     }
     
-    public ManualLeaderElection(Supplier<T> supplier, String conf) {
+    public ManualLeaderElection(final Supplier<T> supplier, final String conf) {
         this.supplier = supplier;
         this.conf = conf;
     }

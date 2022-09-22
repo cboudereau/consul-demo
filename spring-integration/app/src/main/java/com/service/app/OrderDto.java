@@ -12,7 +12,7 @@ public class OrderDto {
         return label;
     }
 
-    public OrderDto(Integer orderId, String label) {
+    public OrderDto(final Integer orderId, final String label) {
         this.orderId = orderId;
         this.label = label;
     }

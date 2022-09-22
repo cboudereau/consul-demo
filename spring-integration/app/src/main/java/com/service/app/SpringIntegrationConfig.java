@@ -52,7 +52,7 @@ public class SpringIntegrationConfig {
 
     @Bean("jdbcPollingAdapter")
     @DependsOn("jdbcTemplate")
-    public JdbcPollingChannelAdapter jdbcPollingAdapter(DataSource dataSource, RowMapper<OrderDto> rowMapper) {
+    public JdbcPollingChannelAdapter jdbcPollingAdapter(final DataSource dataSource, final RowMapper<OrderDto> rowMapper) {
         JdbcPollingChannelAdapter bean = new JdbcPollingChannelAdapter(dataSource, "select order_id, label from orders");
         bean.setRowMapper(rowMapper);
         return bean;
@@ -60,7 +60,7 @@ public class SpringIntegrationConfig {
 
     @Bean("inboundChannel")
     @DependsOn("jdbcPollingAdapter")
-    public ConsulSourcePollingChannelAdapter inboundChannel(@Named("jdbcPollingAdapter") JdbcPollingChannelAdapter jdbcPollingAdapters) throws IllegalAccessException {
+    public ConsulSourcePollingChannelAdapter inboundChannel(final @Named("jdbcPollingAdapter") JdbcPollingChannelAdapter jdbcPollingAdapters) throws IllegalAccessException {
         Trigger poller = new PeriodicTrigger(5000);
         
         ConsulSourcePollingChannelAdapter bean = new ConsulSourcePollingChannelAdapter(new ConsulClient(), 10);

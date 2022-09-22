@@ -11,7 +11,7 @@ final class CompositeLeaderElection<T> implements Supplier<Optional<T>> {
     private final List<Handler<T>> handlers;
     private static final Logger logger = LoggerFactory.getLogger(CompositeLeaderElection.class);
 
-    public CompositeLeaderElection(List<Handler<T>> handlers) {
+    public CompositeLeaderElection(final List<Handler<T>> handlers) {
         this.handlers = handlers;
     }
 

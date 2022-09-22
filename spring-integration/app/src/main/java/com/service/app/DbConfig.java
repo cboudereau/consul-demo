@@ -27,7 +27,7 @@ public class DbConfig {
     @Bean("jdbcTemplate")
     @DependsOn("dataSource")
     @Inject
-    public JdbcTemplate setJdbcTemplate(DataSource dataSource) {
+    public JdbcTemplate setJdbcTemplate(final DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 

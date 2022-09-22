@@ -15,7 +15,7 @@ public class Splitter extends AbstractMessageSplitter{
 
     @Override
     @SuppressWarnings("unchecked") // this is already done in the existing codebase
-    protected Object splitMessage(Message<?> message) {
+    protected Object splitMessage(final Message<?> message) {
         final List<OrderDto> orders = (List<OrderDto>) message.getPayload();
         orders.forEach(order -> logger.info("Splitter: {}/{}", order.getLabel(), order.getOrderId()));
         return orders;
