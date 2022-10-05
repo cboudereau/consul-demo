@@ -105,6 +105,7 @@ Check that the failing health check is up in the [console](http://localhost:8500
 
 ### Dockerfile
 https://snyk.io/blog/best-practices-to-build-java-containers-with-docker/
+https://developers.redhat.com/blog/2017/03/14/java-inside-docker
 
 ### Consul java
 https://springframework.guru/consul-miniseries-spring-boot-application-and-consul-integration-part-1/
