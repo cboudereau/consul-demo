@@ -32,4 +32,10 @@ public class ManualLeaderElectionTest {
         Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> expected, "true").get();
         assertEquals(Optional.of(Optional.of(expected)), actual);
     }
+
+    @Test
+    public final void shouldReturnEmptyWhenConfiguredToTrueIsGiven() {
+        Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> null, "true").get();
+        assertEquals(Optional.of(Optional.empty()), actual);
+    }
 }
