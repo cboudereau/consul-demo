@@ -80,7 +80,7 @@ final class ConsulLeaderElection<T> implements Handler<T> {
             acquireSessionParams.setAcquireSession(sessionId);
             if (cc.setKVValue(leaderKey, sessionId, acquireSessionParams).getValue()) {
                 logger.debug("{}: leader", service);
-                return Optional.of(Optional.of(this.supplier.get()));
+                return Optional.of(Optional.ofNullable(this.supplier.get()));
             } 
             logger.debug("{}: not leader", service);
             return Optional.of(Optional.empty());

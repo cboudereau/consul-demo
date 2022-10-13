@@ -68,6 +68,12 @@ public class ConsulLeaderElectionTest {
     }
 
     @Test
+    public final void shouldReturnEmpptyWhenConsulAcceptsTheSessionLock() {
+        String service = "service";
+        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new OkConsulClientMock(service, true), service, 1, () -> null).get());
+    }
+
+    @Test
     public final void shouldProcessWhenConsulAcceptsTheSessionLock() {
         String service = "service";
         String expected = "hello";

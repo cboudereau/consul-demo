@@ -31,7 +31,7 @@ final class ManualLeaderElection<T> implements Handler<T> {
         logger.warn("forced leader: enabled");
         if(isLeaderForced.map(x -> x.equalsIgnoreCase("true")).orElse(false)){
             logger.warn("forced leader: leader has been elected");
-            return Optional.of(Optional.of(this.supplier.get()));
+            return Optional.of(Optional.ofNullable(this.supplier.get()));
         }
         logger.warn("forced leader: service has not been elected");
         return Optional.of(Optional.empty());
