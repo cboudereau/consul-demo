@@ -1,5 +1,5 @@
 # consul-demo
-__Slides__ are available at cboudereau.github.io/consul-demo/
+__Slides__ are available at https://cboudereau.github.io/consul-demo/
 
 __Sources__ of the live demo : 
 - __leader-election__ : java consul leader-election for active/passive batch on docker compose.
