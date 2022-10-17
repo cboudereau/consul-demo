@@ -2,11 +2,13 @@ package com.service.app;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.core.env.Environment;
 import org.springframework.integration.endpoint.SourcePollingChannelAdapter;
 import org.springframework.integration.jdbc.JdbcPollingChannelAdapter;
 import org.springframework.scheduling.Trigger;
@@ -29,15 +31,18 @@ import java.util.function.Supplier;
 @DependsOn("dbConfig")
 @ImportResource("flow-config.xml")
 public class SpringIntegrationConfig {
-    public static final class ConsulSourcePollingChannelAdapter extends SourcePollingChannelAdapter {
+    @Autowired Environment env;
+    public final class ConsulSourcePollingChannelAdapter extends SourcePollingChannelAdapter {
         private static final Logger logger = LoggerFactory.getLogger(ConsulSourcePollingChannelAdapter.class);
-        private static final String service = System.getenv("SERVICE_NAME");
         
+        private String service = env.getProperty("spring.application.name");
+        private String serviceId = env.getProperty("spring.cloud.consul.discovery.instance-id");
+
         private final Supplier<Optional<Message<?>>> supplier;
 
         public ConsulSourcePollingChannelAdapter(ConsulClient consulClient, int extraDelayInSecond) {
-            logger.info("starting {}", service);
-            this.supplier = LeaderElection.build(consulClient, service, extraDelayInSecond, () -> super.receiveMessage());
+            logger.info("starting {}/{}", service, serviceId);
+            this.supplier = LeaderElection.build(consulClient, service, serviceId, extraDelayInSecond, () -> super.receiveMessage());
         }
 
         @Override

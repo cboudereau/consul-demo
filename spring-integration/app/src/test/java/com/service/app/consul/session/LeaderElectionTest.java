@@ -26,6 +26,6 @@ public class LeaderElectionTest {
     @Test
     public void TestLeaderElectionUsingConsul() {
         assertNotNull(new LeaderElection());
-        assertEquals(Optional.empty(), LeaderElection.build(new NoHealthChecksConsulClientMock(), "service", 1, () -> "hello").get());
+        assertEquals(Optional.empty(), LeaderElection.build(new NoHealthChecksConsulClientMock(), "service", "serviceId", 1, () -> "hello").get());
     }
 }

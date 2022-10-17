@@ -1,6 +1,3 @@
-server:
-  port: 8080
-
 logging:
   level: 
     root: INFO
@@ -8,12 +5,11 @@ logging:
     org.springframework.jdbc.core: TRACE
 
 spring:
-  application:
-    name: app
   cloud:
     consul:
       host: localhost
       discovery:
+        instance-id: ${spring.application.name}-${server.port}
         query-passing: true
         prefer-ip-address: true
         tags: batch

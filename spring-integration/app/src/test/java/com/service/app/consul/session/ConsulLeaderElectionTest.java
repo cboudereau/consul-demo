@@ -31,23 +31,23 @@ public class ConsulLeaderElectionTest {
 
     @Test
     public final void shouldNotProcessWhenNoHealthChecksIsConfigured(){
-        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new NoHealthChecksConsulClientMock(), "service", 1, () -> "hello").get());
+        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new NoHealthChecksConsulClientMock(), "service", "serviceId", 1, () -> "hello").get());
     }
 
     static class OkConsulClientMock extends ConsulClient {
-        private final String service;
+        private final String serviceId;
         private final boolean isLeader;
-        public OkConsulClientMock(String service, boolean isLeader) {
-            this.service = service;
+        public OkConsulClientMock(String serviceId, boolean isLeader) {
+            this.serviceId = serviceId;
             this.isLeader = isLeader;
         }
         @Override
         public final Response<Map<String, Check>> getAgentChecks() {
             HashMap<String, Check> map = new HashMap<>();
             Check value = new Check();
-            value.setServiceName(service);
+            value.setServiceId(serviceId);
             value.setCheckId("checkId");
-            map.put(service, value);
+            map.put(serviceId, value);
 
             return new Response<Map<String,Check>>(map, 1L, true, 1L);
         }
@@ -68,29 +68,29 @@ public class ConsulLeaderElectionTest {
     }
 
     @Test
-    public final void shouldReturnEmpptyWhenConsulAcceptsTheSessionLock() {
-        String service = "service";
-        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new OkConsulClientMock(service, true), service, 1, () -> null).get());
+    public final void shouldReturnEmptyWhenConsulAcceptsTheSessionLock() {
+        String serviceId = "service-8080";
+        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new OkConsulClientMock(serviceId, true), "service", serviceId, 1, () -> null).get());
     }
 
     @Test
     public final void shouldProcessWhenConsulAcceptsTheSessionLock() {
-        String service = "service";
+        String serviceId = "service-8080";
         String expected = "hello";
-        assertEquals(Optional.of(Optional.of(expected)), new ConsulLeaderElection<>(new OkConsulClientMock(service, true), service, 1, () -> expected).get());
+        assertEquals(Optional.of(Optional.of(expected)), new ConsulLeaderElection<>(new OkConsulClientMock(serviceId, true), "service", serviceId, 1, () -> expected).get());
     }
 
     @Test
     public final void shouldNotProcessWhenConsulRefusesTheSessionLock() {
-        String service = "service";
-        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new OkConsulClientMock(service, false), service, 1, () -> "hello").get());
+        String serviceId = "service-8080";
+        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new OkConsulClientMock(serviceId, false), "service", serviceId, 1, () -> "hello").get());
     }
 
     @Test
     public final void shouldProcessWhenConsulRenewsTheSessionLock() {
-        String service = "service";
+        String serviceId = "service-8080";
         String expected = "hello";
-        ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new OkConsulClientMock(service, true), service, 1, () -> expected);
+        ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new OkConsulClientMock(serviceId, true), "service", serviceId, 1, () -> expected);
         assertEquals(Optional.of(Optional.of(expected)), consulLeaderElection.get());
         assertEquals(Optional.of(Optional.of(expected)), consulLeaderElection.get());
     }
@@ -104,14 +104,14 @@ public class ConsulLeaderElectionTest {
 
     @Test
     public final void shouldNotProcessWhenConsulFails() {
-        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new KoNotReadyConsulClientMock(), "service", 1, () -> "hello").get());
+        assertEquals(Optional.of(Optional.empty()), new ConsulLeaderElection<>(new KoNotReadyConsulClientMock(), "service", "serviceId", 1, () -> "hello").get());
     }
 
     static final class KoSessionClientMock extends OkConsulClientMock {
         private int statusCode;
 
-        public KoSessionClientMock(String service, boolean isLeader, int statusCode) {
-            super(service, isLeader);
+        public KoSessionClientMock(String serviceId, boolean isLeader, int statusCode) {
+            super(serviceId, isLeader);
             this.statusCode = statusCode;
         }
 
@@ -124,8 +124,8 @@ public class ConsulLeaderElectionTest {
     @Test
     public final void shouldProcessWhenConsulSessionIsRecreatedFails() {
         String expected = "hello";
-        String service = "service";
-        ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new KoSessionClientMock(service, true, 404), service, 1, () -> expected);
+        String serviceId = "serviceId";
+        ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new KoSessionClientMock(serviceId, true, 404), "service", serviceId, 1, () -> expected);
         assertEquals(Optional.of(Optional.of(expected)), consulLeaderElection.get());
         assertEquals(Optional.of(Optional.of(expected)), consulLeaderElection.get());
     }
@@ -133,8 +133,8 @@ public class ConsulLeaderElectionTest {
     @Test
     public final void shouldNotProcessWhenConsulSessionIsRenewFails() {
         String expected = "hello";
-        String service = "service";
-        ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new KoSessionClientMock(service, true, 500), service, 1, () -> expected);
+        String serviceId = "serviceId";
+        ConsulLeaderElection<String> consulLeaderElection = new ConsulLeaderElection<>(new KoSessionClientMock(serviceId, true, 500), "service", serviceId, 1, () -> expected);
         assertEquals(Optional.of(Optional.of(expected)), consulLeaderElection.get());
         assertEquals(Optional.of(Optional.empty()), consulLeaderElection.get());
     }

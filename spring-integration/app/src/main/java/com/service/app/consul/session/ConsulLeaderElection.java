@@ -20,7 +20,7 @@ final class ConsulLeaderElection<T> implements Handler<T> {
     private static final Logger logger = LoggerFactory.getLogger(ConsulLeaderElection.class);
 
     private final ConsulClient cc;
-    private final String service;
+    private final String serviceId;
     private final String leaderKey;
     private final Supplier<T> supplier;
     private final NewSession newSession;
@@ -28,11 +28,11 @@ final class ConsulLeaderElection<T> implements Handler<T> {
     private String sessionId = null;
     private List<String> checkIds = null;
     
-    public ConsulLeaderElection(final ConsulClient cc, final String service, final long lockDelayInSecond, final Supplier<T> handler) {
+    public ConsulLeaderElection(final ConsulClient cc, final String service, final String serviceId, final long lockDelayInSecond, final Supplier<T> handler) {
         this.newSession = new NewSession();
         this.newSession.setLockDelay(lockDelayInSecond);
         this.cc = cc;
-        this.service = service;
+        this.serviceId = serviceId;
         this.supplier = handler;
         this.leaderKey = String.format("%s/leader", service);
     }
@@ -50,43 +50,43 @@ final class ConsulLeaderElection<T> implements Handler<T> {
     
     @Override
     public Optional<Optional<T>> get() {
-        logger.debug("starting leader election consul based");
+        logger.debug("{} : starting leader election consul based", serviceId);
         try {
             if (checkIds == null) {
-                List<String> checkIdResult = cc.getAgentChecks().getValue().values().stream().filter(x -> x.getServiceName().equals(service)).map(x -> x.getCheckId()).collect(Collectors.toList());
+                List<String> checkIdResult = cc.getAgentChecks().getValue().values().stream().filter(x -> x.getServiceId().equals(serviceId)).map(x -> x.getCheckId()).collect(Collectors.toList());
                 if (checkIdResult.isEmpty()) {
-                    logger.warn("empty {} agent service checks returned, awaiting service and health checks registration", service);
+                    logger.warn("{} : empty agent service checks returned, awaiting service and health checks registration", serviceId);
                     return Optional.of(Optional.empty());
                 }
                 checkIdResult.add("serfHealth");
                 checkIds = checkIdResult;
                 
-                logger.debug("setting up session health checks {}", checkIds);
+                logger.debug("{} : setting up session health checks {}", serviceId, checkIds);
                 newSession.setChecks(checkIds);
             }
             
             sessionId = Optional.ofNullable(sessionId)
                 .flatMap(x -> renewSession(cc, x)).map(sId -> {
-                    logger.debug("{}: session renewed", sId);
+                    logger.debug("{}/{}: session renewed", serviceId, sId);
                     return sId;
                 })
                 .orElseGet(() -> {
                     String sId = cc.sessionCreate(newSession, QueryParams.DEFAULT).getValue();
-                    logger.debug("{}: session created", sId);
+                    logger.debug("{}/{}: session created", serviceId, sId);
                     return sId;
                 });
 
             PutParams acquireSessionParams = new PutParams();
             acquireSessionParams.setAcquireSession(sessionId);
             if (cc.setKVValue(leaderKey, sessionId, acquireSessionParams).getValue()) {
-                logger.debug("{}: leader", service);
+                logger.debug("{}: leader", serviceId);
                 return Optional.of(Optional.ofNullable(this.supplier.get()));
             } 
-            logger.debug("{}: not leader", service);
+            logger.debug("{}: not leader", serviceId);
             return Optional.of(Optional.empty());
         } 
         catch (ConsulException e) {
-            logger.error("error while managing leader", e);
+            logger.error("{}: error while managing leader", serviceId, e);
             return Optional.of(Optional.empty());
         }
     }
