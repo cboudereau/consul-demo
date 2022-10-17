@@ -63,7 +63,7 @@ services:
       - backend 
     environment:
       - CONSUL_ARGS=-log-level info -log-json -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3
-      - server.port=8080
+      # - server.port=8080
       - spring.application.name=app
     depends_on:
       - database
