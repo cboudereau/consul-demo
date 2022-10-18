@@ -11,7 +11,7 @@ public class ManualLeaderElectionTest {
     
     @Test
     public final void ShouldNotBeActivatedWhenNoConfigurationIsGiven() {
-        Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> "hello", null).get();
+        final Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> "hello", null).get();
         assertEquals(Optional.empty(), actual);
     }
 
@@ -22,20 +22,20 @@ public class ManualLeaderElectionTest {
 
     @Test
     public final void ShouldNotBeLeaderWhenConfiguredToFalseIsGiven() {
-        Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> "hello", "false").get();
+        final Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> "hello", "false").get();
         assertEquals(Optional.of(Optional.empty()), actual);
     }
 
     @Test
     public final void ShouldBeLeaderWhenConfiguredToTrueIsGiven() {
-        String expected = "hello";
-        Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> expected, "true").get();
+        final String expected = "hello";
+        final Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> expected, "true").get();
         assertEquals(Optional.of(Optional.of(expected)), actual);
     }
 
     @Test
     public final void shouldReturnEmptyWhenConfiguredToTrueIsGiven() {
-        Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> null, "true").get();
+        final Optional<Optional<String>> actual = new ManualLeaderElection<String>(() -> null, "true").get();
         assertEquals(Optional.of(Optional.empty()), actual);
     }
 }
