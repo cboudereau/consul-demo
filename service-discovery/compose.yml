@@ -49,6 +49,14 @@ services:
       - tempo
       - service
 
+  curl:
+    image: alpine/curl
+    networks:
+      - bridge
+    entrypoint: sh -c "watch -n 0.5 -d -- curl http://client:8080/hello 2>&1 > /dev/null"
+    depends_on:
+      - client
+
   prometheus:
     build: 
       context: ./prometheus
