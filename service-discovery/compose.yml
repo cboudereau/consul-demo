@@ -25,6 +25,8 @@ services:
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
       - OTEL_METRICS_EXPORTER=none
+    volumes:
+      - logs:/app/logs
     depends_on:
       - consul-server
       - loki
@@ -43,6 +45,8 @@ services:
       - OTEL_METRICS_EXPORTER=none
     ports:
       - 8080:8080
+    volumes:
+      - logs:/app/logs
     depends_on:
       - consul-server
       - loki
@@ -77,6 +81,18 @@ services:
     networks:
       - bridge
 
+  splunk:
+    image: splunk/splunk
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=splunk1234
+    ports:
+      - 8000:8000
+    networks:
+      - bridge
+    volumes:
+      - logs:/data
+
   tempo:
     image: grafana/tempo:1.5.0
     volumes:
@@ -101,3 +117,6 @@ services:
 
 networks:
   bridge:
+
+volumes:
+  logs:

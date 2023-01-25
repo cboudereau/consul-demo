@@ -35,6 +35,8 @@ RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
 USER 1000
 WORKDIR /app
 
+RUN mkdir -p /app/logs && chown -R 1000:1000 /app
+
 ADD --chown=1000:1000 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.17.0/opentelemetry-javaagent.jar ./opentelemetry-javaagent.jar
 
 COPY --chown=1000:1000 --from=consul /bin/consul /app/consul
