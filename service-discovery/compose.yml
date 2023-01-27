@@ -80,6 +80,15 @@ services:
     image: grafana/loki:2.6.1
     networks:
       - bridge
+  
+  # mtail:
+  #   build: ./mtail
+  #   command: "--progs /tmp/progs/ --logs /tmp/logs/service/*.log"
+  #   volumes:
+  #     - ./mtail-progs/client:/tmp/progs/:ro
+  #     - logs:/tmp/logs/:ro
+  #   ports:
+  #     - 3903:3903
 
   splunk:
     image: splunk/splunk
@@ -90,8 +99,6 @@ services:
       - 8000:8000
     networks:
       - bridge
-    volumes:
-      - logs:/data
 
   tempo:
     image: grafana/tempo:1.5.0

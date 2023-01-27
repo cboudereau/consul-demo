@@ -1,0 +1,24 @@
+counter lines_total
+
+#2023-01-25T17:35:25,386Z [http-nio-8080-exec-6] INFO  com.helloworld.service.Controllers - [6] /user has been called!
+
+histogram controllers_seconds buckets 0.005, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 10  by host, path
+counter controllers by host, path
+getfilename() =~ /(?P<host>\w+)\.log$/ {
+
+  /^(?P<date>[^\s]+)/ +
+  /\s+\[.*\]+/ +
+  /\s+[^\s]+/ +
+  /\s+com\.helloworld\.service\.Controllers/ +
+  /\s+-\s+\[(?P<latency>\d+)\]/ +
+  /\s+(?P<path>[^\s]+)/ +
+  /.*/ +
+  /$/ {
+    strptime($date, "2006-01-02T15:04:05Z07:00")
+    controllers_seconds[$host][$path]=float($latency) / 1000
+    controllers[$host][$path]++
+    lines_total++
+  } 
+
+}
+

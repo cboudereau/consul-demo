@@ -1,0 +1,3 @@
+[submodule "service-discovery/mtail"]
+	path = service-discovery/mtail
+	url = git@github.com-cboudereau:google/mtail.git
