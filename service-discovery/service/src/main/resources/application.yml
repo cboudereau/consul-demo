@@ -14,6 +14,16 @@ spring:
         prefer-ip-address: false
         tags: prometheus
 management:
+
+  otlp:
+    metrics:
+      export:
+        enabled: true
+        url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/otlp/v1/metrics
+        step: 10s
+        headers:
+          Authorization: Basic #######
+
   metrics:
     distribution:
       slo:
