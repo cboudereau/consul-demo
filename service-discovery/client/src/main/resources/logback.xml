@@ -7,7 +7,7 @@
         </http>
         <format>
             <label>
-                <pattern>application=${app},host=${HOSTNAME},level=%level</pattern>
+                <pattern>application=${app},host=${HOSTNAME},level=%level,env=${SERVICE_ENV}</pattern>
             </label>
             <message>
                 <pattern>l=%level h=${HOSTNAME} c=%logger{20} t=%thread traceId=%X{trace_id} spanId=%X{span_id} | %msg %ex</pattern>

@@ -19,10 +19,11 @@ management:
     metrics:
       export:
         enabled: true
-        url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/otlp/v1/metrics
         step: 10s
-        headers:
-          Authorization: Basic #######
+        url: http://mimir:9009/otlp/v1/metrics
+        # url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/otlp/v1/metrics
+        # headers:
+        #   Authorization: Basic ####
 
   metrics:
     distribution:

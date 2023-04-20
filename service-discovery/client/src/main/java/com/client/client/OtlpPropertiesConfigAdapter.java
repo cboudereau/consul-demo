@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.helloworld.service;
+package com.client.client;
 
 import java.util.Map;
 

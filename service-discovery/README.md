@@ -8,6 +8,12 @@ https://opentelemetry.io/docs/
 https://opentelemetry.io/docs/instrumentation/java/automatic/agent-config/
 https://github.com/open-telemetry/opentelemetry-java/blob/main/sdk-extensions/autoconfigure/README.md#sampler
 
+### proxy conf
+
+if the telemetry instrumentation/appender does not support proxy, configure a system properties (http.proxyHost/http.proxyPort or https.proxyHost/https.proxyPort) proxy by excluding existing http/https internal dependencies (http.nonProxyHosts)
+
+https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html
+
 ## TODO
 Micrometer span_id / trace_id
 Grafana/Prometheus exemplars

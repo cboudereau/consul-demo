@@ -2,7 +2,7 @@
 version: '3.8'
 services:
   consul-server:
-    image: hashicorp/consul:1.13.1
+    image: hashicorp/consul:1.15.2
     restart: always
     volumes:
      - ./consul.d/server/server.json:/consul/config/server.json:ro
@@ -39,6 +39,7 @@ services:
     environment:
       - CONSUL_ARGS=-retry-join consul-server
       - SERVICE_NAME=client
+      - SERVICE_ENV=dev
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
       - OTEL_METRICS_EXPORTER=none
@@ -74,12 +75,23 @@ services:
       - consul-server
 
   loki:
-    image: grafana/loki:2.6.1
+    image: grafana/loki:2.7.5
+    command: -config.file=/etc/loki/local-config.yaml -query-scheduler.max-outstanding-requests-per-tenant=2048 -querier.max-outstanding-requests-per-tenant=2048
+    volumes:
+      - ./loki/:/etc/loki/:ro
+    networks:
+      - bridge
+
+  mimir:
+    image: grafana/mimir:2.7.1
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+    command: --config.file=/etc/mimir.yaml
     networks:
       - bridge
 
   tempo:
-    image: grafana/tempo:1.5.0
+    image: grafana/tempo:2.0.1
     volumes:
       - ./tempo/tempo-local.yaml:/etc/tempo.yaml:ro
     command: [ "-config.file=/etc/tempo.yaml" ]
@@ -87,7 +99,10 @@ services:
       - bridge
 
   grafana:
-    image: grafana/grafana-oss:9.1.1
+    image: grafana/grafana-oss:9.4.7
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     ports:
       - 3000:3000
     networks:
