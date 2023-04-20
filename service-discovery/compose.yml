@@ -22,6 +22,7 @@ services:
     environment:
       - CONSUL_ARGS=-retry-join consul-server
       - SERVICE_NAME=users-service
+      - SERVICE_ENV=dev
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
       - OTEL_METRICS_EXPORTER=none
