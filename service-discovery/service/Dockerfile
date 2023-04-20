@@ -20,8 +20,8 @@ RUN ./mvnw dependency:resolve dependency:go-offline -B
 COPY src ./src
 RUN ./mvnw -o package
 
-FROM hashicorp/consul:1.13.1 as consul
-FROM alpine:3.16
+FROM hashicorp/consul:1.15.2 as consul
+FROM alpine:3.17.3
 
 RUN apk add --no-cache supervisor
 
@@ -35,7 +35,7 @@ RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
 USER 1000
 WORKDIR /app
 
-ADD --chown=1000:1000 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.17.0/opentelemetry-javaagent.jar ./opentelemetry-javaagent.jar
+ADD --chown=1000:1000 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.25.0/opentelemetry-javaagent.jar ./opentelemetry-javaagent.jar
 
 COPY --chown=1000:1000 --from=consul /bin/consul /app/consul
 

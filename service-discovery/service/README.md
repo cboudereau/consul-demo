@@ -6,6 +6,12 @@
 - vscode plugin: Spring Initializr Java Support
 - ctrl+shift+p: Spring Initializr create project
 
+### debug 
+install jar sources : 
+```
+mvn dependency:sources
+```
+
 ### Dockerfile
 https://snyk.io/blog/best-practices-to-build-java-containers-with-docker/
 
