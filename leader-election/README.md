@@ -62,7 +62,7 @@ Kill java app (leader)
 signal SIGKILL app
 ```
 
-After the service health check has been in CRITICAL stauts, the next instance is elected
+After the service health check has been in CRITICAL status, the next instance is elected
 
 Start java app (old leader)
 ```bash
