@@ -3,7 +3,7 @@ version: '3.8'
 
 services:
   consul-server-1:
-    image: hashicorp/consul:1.15.2
+    image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     cap_add:
      - ALL
@@ -14,7 +14,7 @@ services:
     command: "agent -node consul-server-1 -bootstrap-expect 4 -retry-join consul-server-2 -retry-join consul-server-3 -retry-join consul-server-4"
 
   consul-server-2:
-    image: hashicorp/consul:1.15.2
+    image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     volumes:
      - ./consul.d/server/server.json:/consul/config/server.json:ro
@@ -23,7 +23,7 @@ services:
     command: "agent -node consul-server-2 -bootstrap-expect 4 -retry-join consul-server-1 -retry-join consul-server-3 -retry-join consul-server-4"
 
   consul-server-3:
-    image: hashicorp/consul:1.15.2
+    image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     volumes:
      - ./consul.d/server/server.json:/consul/config/server.json:ro
@@ -32,7 +32,7 @@ services:
     command: "agent -node consul-server-3 -bootstrap-expect 4 -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-4"
 
   consul-server-4:
-    image: hashicorp/consul:1.15.2
+    image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     volumes:
      - ./consul.d/server/server.json:/consul/config/server.json:ro
@@ -53,7 +53,7 @@ services:
       - consul-ui-only
 
   consul-ui-only:
-    image: hashicorp/consul:1.15.2
+    image: hashicorp/consul:${CONSUL_VERSION}
     deploy:
       replicas: 2
     networks:
@@ -68,7 +68,7 @@ services:
       - consul-server-4
 
   init-dc:
-    image: hashicorp/consul:1.15.2
+    image: hashicorp/consul:${CONSUL_VERSION}
     networks:
       - backend
     volumes:
@@ -83,6 +83,8 @@ services:
   service:
     build: 
       context: ./service/app
+      args:
+        - CONSUL_VERSION=${CONSUL_VERSION}
     deploy:
       replicas: 2
     networks:
