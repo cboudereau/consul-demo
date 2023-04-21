@@ -6,9 +6,9 @@ services:
     image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     cap_add:
-     - ALL
+      - ALL
     volumes:
-     - ./consul.d/server/server.json:/consul/config/server.json:ro
+      - ./consul.d/server/server.json:/consul/config/server.json:ro
     networks:
       - backend
     command: "agent -node consul-server-1 -bootstrap-expect 4 -retry-join consul-server-2 -retry-join consul-server-3 -retry-join consul-server-4"
@@ -17,7 +17,7 @@ services:
     image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     volumes:
-     - ./consul.d/server/server.json:/consul/config/server.json:ro
+      - ./consul.d/server/server.json:/consul/config/server.json:ro
     networks:
       - backend
     command: "agent -node consul-server-2 -bootstrap-expect 4 -retry-join consul-server-1 -retry-join consul-server-3 -retry-join consul-server-4"
@@ -26,7 +26,7 @@ services:
     image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     volumes:
-     - ./consul.d/server/server.json:/consul/config/server.json:ro
+      - ./consul.d/server/server.json:/consul/config/server.json:ro
     networks:
       - backend
     command: "agent -node consul-server-3 -bootstrap-expect 4 -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-4"
@@ -35,7 +35,7 @@ services:
     image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     volumes:
-     - ./consul.d/server/server.json:/consul/config/server.json:ro
+      - ./consul.d/server/server.json:/consul/config/server.json:ro
     networks:
       - backend
     command: "agent -node consul-server-4 -bootstrap-expect 4 -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3"
@@ -81,7 +81,7 @@ services:
       - consul-server-4
 
   service:
-    build: 
+    build:
       context: ./service/app
       args:
         - CONSUL_VERSION=${CONSUL_VERSION}
@@ -90,7 +90,8 @@ services:
     networks:
       - backend
     environment:
-      - CONSUL_ARGS=-log-level info -log-json -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3 -retry-join consul-server-4
+      # TODO set -log-level info instead of error when consul agent will be fixed https://developer.hashicorp.com/consul/docs/upgrading/upgrade-specific#deprecating-authentication-via-token-query-parameter
+      - CONSUL_ARGS=-log-level error -log-json -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3 -retry-join consul-server-4
       - SERVICE_NAME=app
       # - IS_LEADER=false
     depends_on:

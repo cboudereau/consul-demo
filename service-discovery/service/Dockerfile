@@ -1,4 +1,8 @@
-FROM openjdk:17-alpine as jdk
+ARG CONSUL_VERSION
+ARG JDK_IMAGE
+ARG DISTRO
+
+FROM ${JDK_IMAGE} as jdk
 # required for strip-debug to work
 RUN apk add --no-cache binutils
 RUN $JAVA_HOME/bin/jlink \
@@ -10,7 +14,7 @@ RUN $JAVA_HOME/bin/jlink \
          --compress=2 \
          --output /jre-lightweight
 
-FROM openjdk:17-alpine as build
+FROM ${JDK_IMAGE} as build
 WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
@@ -20,8 +24,8 @@ RUN ./mvnw dependency:resolve dependency:go-offline -B
 COPY src ./src
 RUN ./mvnw -o package
 
-FROM hashicorp/consul:1.15.2 as consul
-FROM alpine:3.17.3
+FROM hashicorp/consul:${CONSUL_VERSION} as consul
+FROM ${DISTRO}
 
 RUN apk add --no-cache supervisor
 
@@ -30,12 +34,14 @@ ENV PATH="${JAVA_HOME}/bin:${PATH}"
 COPY --from=jdk /jre-lightweight $JAVA_HOME
 
 ARG APPLICATION_USER=appuser
+ARG OTEL_JAVA_AGENT_VERSION
+
 RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
 
 USER 1000
 WORKDIR /app
 
-ADD --chown=1000:1000 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.25.0/opentelemetry-javaagent.jar ./opentelemetry-javaagent.jar
+ADD --chown=1000:1000 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/${OTEL_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar ./opentelemetry-javaagent.jar
 
 COPY --chown=1000:1000 --from=consul /bin/consul /app/consul
 

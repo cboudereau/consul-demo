@@ -2,10 +2,10 @@
 version: '3.8'
 services:
   consul-server:
-    image: hashicorp/consul:1.15.2
+    image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     volumes:
-     - ./consul.d/server/server.json:/consul/config/server.json:ro
+      - ./consul.d/server/server.json:/consul/config/server.json:ro
     networks:
       - bridge
     ports:
@@ -13,14 +13,20 @@ services:
     command: "agent"
 
   service:
-    build: 
+    build:
       context: ./service
+      args:
+        - CONSUL_VERSION=${CONSUL_VERSION}
+        - JDK_IMAGE=${JDK_IMAGE}
+        - DISTRO=${DISTRO}
+        - OTEL_JAVA_AGENT_VERSION=${OTEL_JAVA_AGENT_VERSION}
     deploy:
       replicas: 4
     networks:
       - bridge
     environment:
-      - CONSUL_ARGS=-retry-join consul-server
+      # TODO set -log-level info instead of error when consul agent will be fixed https://developer.hashicorp.com/consul/docs/upgrading/upgrade-specific#deprecating-authentication-via-token-query-parameter
+      - CONSUL_ARGS=-log-level error -log-json -retry-join consul-server
       - SERVICE_NAME=users-service
       - SERVICE_ENV=dev
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
@@ -28,16 +34,23 @@ services:
       - OTEL_METRICS_EXPORTER=none
     depends_on:
       - consul-server
+      - mimir
       - loki
       - tempo
 
   client:
-    build: 
+    build:
       context: ./client
+      args:
+        - CONSUL_VERSION=${CONSUL_VERSION}
+        - JDK_IMAGE=${JDK_IMAGE}
+        - DISTRO=${DISTRO}
+        - OTEL_JAVA_AGENT_VERSION=${OTEL_JAVA_AGENT_VERSION}
     networks:
       - bridge
     environment:
-      - CONSUL_ARGS=-retry-join consul-server
+      # TODO set -log-level info instead of error when consul agent will be fixed https://developer.hashicorp.com/consul/docs/upgrading/upgrade-specific#deprecating-authentication-via-token-query-parameter
+      - CONSUL_ARGS=-log-level error -log-json -retry-join consul-server
       - SERVICE_NAME=client
       - SERVICE_ENV=dev
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
@@ -47,6 +60,7 @@ services:
       - 8080:8080
     depends_on:
       - consul-server
+      - mimir
       - loki
       - tempo
       - service
@@ -60,8 +74,11 @@ services:
       - client
 
   prometheus:
-    build: 
+    build:
       context: ./prometheus
+      args:
+        - CONSUL_VERSION=${CONSUL_VERSION}
+        - PROMETHEUS_VERSION=${PROMETHEUS_VERSION}
     networks:
       - bridge
     environment:
@@ -111,6 +128,7 @@ services:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
       - ./grafana/provisioning/:/etc/grafana/provisioning/:ro
     depends_on:
+      - mimir
       - prometheus
       - loki
       - tempo

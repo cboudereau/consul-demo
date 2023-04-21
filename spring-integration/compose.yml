@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   consul-server-1:
-    image: hashicorp/consul:1.13.1
+    image: hashicorp/consul:1.15.2
     restart: always
     volumes:
      - ./consul.d/server/server.json:/consul/config/server.json:ro
@@ -11,7 +11,7 @@ services:
     command: "agent -node consul-server-1 -bootstrap-expect 3 -retry-join consul-server-2 -retry-join consul-server-3"
 
   consul-server-2:
-    image: hashicorp/consul:1.13.1
+    image: hashicorp/consul:1.15.2
     restart: always
     volumes:
      - ./consul.d/server/server.json:/consul/config/server.json:ro
@@ -20,7 +20,7 @@ services:
     command: "agent -node consul-server-2 -bootstrap-expect 3 -retry-join consul-server-1 -retry-join consul-server-3"
 
   consul-server-3:
-    image: hashicorp/consul:1.13.1
+    image: hashicorp/consul:${CONSUL_VERSION}
     restart: always
     volumes:
      - ./consul.d/server/server.json:/consul/config/server.json:ro
@@ -29,7 +29,7 @@ services:
     command: "agent -node consul-server-3 -bootstrap-expect 3 -retry-join consul-server-1 -retry-join consul-server-2"
 
   lb:
-    image: nginx:1.23.1
+    image: nginx:1.24.0
     networks:
       - frontend
       - backend
@@ -41,7 +41,7 @@ services:
       - consul-ui-only
 
   consul-ui-only:
-    image: hashicorp/consul:1.13.1
+    image: hashicorp/consul:${CONSUL_VERSION}
     deploy:
       replicas: 2
     networks:
@@ -57,12 +57,14 @@ services:
   batch:
     build: 
       context: ./app
+      args:
+        - CONSUL_VERSION=${CONSUL_VERSION}
     deploy:
       replicas: 2
     networks:
       - backend 
     environment:
-      - CONSUL_ARGS=-log-level info -log-json -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3
+      - CONSUL_ARGS=-log-level error -log-json -retry-join consul-server-1 -retry-join consul-server-2 -retry-join consul-server-3
       # - server.port=8080
       - spring.application.name=app
     depends_on:
@@ -72,7 +74,7 @@ services:
       - consul-server-3
   
   database:
-    image: postgres:14.5
+    image: postgres:15.2
     networks:
       - backend
     environment:

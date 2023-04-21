@@ -1,3 +1,4 @@
-export CONSUL_VERSION=1.15.2
+set -eux
+. ./env.sh
 
 docker compose down --remove-orphans -v --rmi local && docker compose up

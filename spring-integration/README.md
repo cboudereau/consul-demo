@@ -3,7 +3,7 @@
 ## Database intro
 
 ```bash
-docker compose down --remove-orphans -v --rmi local && docker compose up
+./up.sh
 ```
 
 Analyze the database

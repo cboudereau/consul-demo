@@ -11,7 +11,7 @@ Because existing system is only based on 2 dc instead of 3, 4 consul servers are
 ## Demo
 
 ```bash
-./run.sh
+./up.sh
 ```
 
 Observe the logs leader and stop it

@@ -1,4 +1,8 @@
-FROM openjdk:17-alpine as jdk
+ARG CONSUL_VERSION
+ARG JDK_IMAGE=openjdk:17-alpine
+ARG DISTRO=alpine:3.17.3
+
+FROM ${JDK_IMAGE} as jdk
 # required for strip-debug to work
 RUN apk add --no-cache binutils
 RUN $JAVA_HOME/bin/jlink \
@@ -10,7 +14,7 @@ RUN $JAVA_HOME/bin/jlink \
          --compress=2 \
          --output /jre-lightweight
 
-FROM openjdk:17-alpine as build
+FROM ${JDK_IMAGE} as build
 WORKDIR /app
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
@@ -20,8 +24,8 @@ RUN ./mvnw dependency:resolve dependency:go-offline -B
 COPY src ./src
 RUN ./mvnw -o package
 
-FROM hashicorp/consul:1.13.1 as consul
-FROM alpine:3.16
+FROM hashicorp/consul:${CONSUL_VERSION} as consul
+FROM ${DISTRO}
 
 RUN apk add --no-cache supervisor
 

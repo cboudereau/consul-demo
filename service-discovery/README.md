@@ -20,7 +20,7 @@ Grafana/Prometheus exemplars
 
 ## demo
 ```bash
-docker compose down --remove-orphans -v --rmi local && docker compose up
+./up.sh
 ```
 
 Spawn 4 services and call multiple times the client service and observer the round robin in the service logs

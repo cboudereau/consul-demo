@@ -1,5 +1,8 @@
-FROM hashicorp/consul:1.15.2 as consul
-FROM prom/prometheus:v2.43.0
+ARG CONSUL_VERSION
+ARG PROMETHEUS_VERSION
+
+FROM hashicorp/consul:${CONSUL_VERSION} as consul
+FROM prom/prometheus:${PROMETHEUS_VERSION}
 
 COPY --from=consul /bin/consul /bin/consul
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
