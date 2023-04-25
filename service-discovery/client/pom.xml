@@ -51,10 +51,16 @@
             <version>1.11.0-M1</version>
         </dependency>
 
-        <dependency>
+        <!-- <dependency>
             <groupId>com.github.loki4j</groupId>
             <artifactId>loki-logback-appender</artifactId>
             <version>1.4.0</version>
+        </dependency> -->
+
+        <dependency>
+            <groupId>pl.tkowalcz.tjahzi</groupId>
+            <artifactId>logback-appender-nodep</artifactId>
+            <version>0.9.29</version>
         </dependency>
 
         <dependency>

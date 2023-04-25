@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <springProperty name="app" source="spring.application.name"/>
-    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+    <!-- <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
         <http>
             <url>http://loki:3100/loki/api/v1/push</url>
         </http>
@@ -14,6 +14,30 @@
             </message>
             <sortByTime>true</sortByTime>
         </format>
+    </appender> -->
+
+    <appender name="LOKI" class="pl.tkowalcz.tjahzi.logback.LokiAppender">
+        <url>http://loki:3100/loki/api/v1/push</url>
+
+        <encoder>
+            <pattern>l=%level h=${HOSTNAME} c=%logger{20} t=%thread traceId=%X{trace_id} spanId=%X{span_id} | %msg %ex</pattern>
+        </encoder>
+
+        <label>
+            <name>application</name>
+            <value>${app}</value>
+        </label>
+        <label>
+            <name>host</name>
+            <value>${HOSTNAME}</value>
+        </label>
+        <logLevelLabel>
+            level
+        </logLevelLabel>
+        <label>
+            <name>env</name>
+            <value>${SERVICE_ENV}</value>
+        </label>
     </appender>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
