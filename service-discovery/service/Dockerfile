@@ -25,6 +25,7 @@ COPY src ./src
 RUN ./mvnw -o package
 
 FROM hashicorp/consul:${CONSUL_VERSION} as consul
+FROM timberio/vector:0.29.1-alpine as vector
 FROM ${DISTRO}
 
 RUN apk add --no-cache supervisor
@@ -41,9 +42,12 @@ RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
 USER 1000
 WORKDIR /app
 
+RUN mkdir -p /app/log && mkdir -p /app/vector_data
+
 ADD --chown=1000:1000 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/${OTEL_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar ./opentelemetry-javaagent.jar
 
 COPY --chown=1000:1000 --from=consul /bin/consul /app/consul
+COPY --chown=1000:1000 --from=vector /usr/local/bin/vector /app/vector
 
 COPY --chown=1000:1000 ./supervisord.conf /app/supervisord.conf
 COPY --chown=1000:1000 ./supervisor.d/ /app/supervisor.d/

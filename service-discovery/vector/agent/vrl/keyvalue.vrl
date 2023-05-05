@@ -1,0 +1,13 @@
+structured, err = parse_key_value(.message)
+
+if err != null {
+    # log .message and .err to have the full context (line + err) to reproduce and fix the error
+    .err = err
+    log(., level: "error")
+    abort "access.log parsing failure"
+} 
+
+. |= structured
+.timestamp = parse_timestamp(.timestamp, "%d/%b/%Y:%H:%M:%S %z") ?? now()
+
+del(.message)

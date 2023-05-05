@@ -13,6 +13,7 @@ import lombok.Value;
 @RestController
 public class Controllers {
 	Logger logger = LoggerFactory.getLogger(Controllers.class);
+	Logger customLogger = LoggerFactory.getLogger("custom_logger");
 	@Value
     static class User {
 		public User(final String name, final String surname) {
@@ -30,6 +31,7 @@ public class Controllers {
 
 	@GetMapping(path="/user")
     User getUser() {
+		customLogger.info("H=1234 T=100");
 		logger.info("/user has been called!");
 		return getSpringGuruUser();
 	}
