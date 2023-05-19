@@ -1,0 +1,53 @@
+# file log
+[sources.service_file_raw]
+type = "file"
+include = ["/app/log/*.log"]
+
+[transforms.service_file]
+type = "remap"
+inputs = ["service_file_raw"]
+file = "/app/vector_config/vrl/keyvalue.vrl"
+# forward to a dead letter queue on error or abort 
+drop_on_error = true
+drop_on_abort = true
+reroute_dropped = true
+
+[[tests]]
+name = "Test service_file parsing"
+
+[[tests.inputs]]
+insert_at = "service_file"
+type = "log" 
+
+[tests.inputs.log_fields]
+message = "timestamp=2023/05/19 11:00:21\tH=4095\tT=2675"
+
+[[tests.outputs]]
+extract_from = "service_file"
+
+[[tests.outputs.conditions]]
+type = "vrl"
+source = '''
+assert!(is_timestamp(.timestamp))
+'''
+
+[transforms.service_file_2_metric]
+type = "log_to_metric"
+inputs = ["service_file"]
+[[transforms.service_file_2_metric.metrics]]
+type = "counter"
+field = "T"
+namespace = "service"
+name = "count"
+    [transforms.service_file_2_metric.metrics.tags]
+    host = "{{host}}"
+    H = "{{H}}"
+[[transforms.service_file_2_metric.metrics]]
+type = "counter"
+field = "T"
+namespace = "service"
+name = "total"
+increment_by_value = true
+    [transforms.service_file_2_metric.metrics.tags]
+    host = "{{host}}"
+    H = "{{H}}"

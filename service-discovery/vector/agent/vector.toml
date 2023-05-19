@@ -3,66 +3,6 @@
 
 data_dir = "/app/vector_data"
 
-## vector monitoring
-[sources.vector_logs]
-type = "internal_logs"
-
-[sinks.loki]
-type = "loki"
-endpoint = "http://loki:3100"
-inputs = ["vector_logs"]
-encoding = { codec = "json" }
-labels = { application = "vector" }
-
-[sources.vector_metrics]
-type = "internal_metrics"
-
-[sources.host_metrics]
-type = "host_metrics"
-namespace = "node"
-
-[transforms.for_mimir]
-type = "remap"
-inputs = ["host_metrics", "vector_metrics"]
-file = "/app/vector_config/vrl/for_mimir.vrl"
-
-[sinks.mimir]
-type = "prometheus_remote_write"
-inputs = ["for_mimir", "service_file_2_metric"]
-endpoint = "http://mimir:9009/api/v1/push"
-
-# file log
-[sources.service_file_raw]
-type = "file"
-include = ["/app/log/*.log"]
-
-[transforms.service_file]
-type = "remap"
-inputs = ["service_file_raw"]
-file = "/app/vector_config/vrl/keyvalue.vrl"
-
-
-[transforms.service_file_2_metric]
-type = "log_to_metric"
-inputs = ["service_file"]
-[[transforms.service_file_2_metric.metrics]]
-type = "counter"
-field = "T"
-namespace = "service"
-name = "count"
-    [transforms.service_file_2_metric.metrics.tags]
-    host = "{{host}}"
-    H = "{{H}}"
-[[transforms.service_file_2_metric.metrics]]
-type = "counter"
-field = "T"
-namespace = "service"
-name = "total"
-increment_by_value = true
-    [transforms.service_file_2_metric.metrics.tags]
-    host = "{{host}}"
-    H = "{{H}}"
-
 # debug sink to console
 [sinks.console]
 type = "console"
