@@ -43,7 +43,6 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 4701,
   "graphTooltip": 1,
-  "id": 5,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -3687,11 +3686,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_buffer_total_capacity_bytes{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
+          "editorMode": "code",
+          "expr": "jvm_buffer_total_capacity{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "capacity",
           "metric": "",
+          "range": true,
           "refId": "B",
           "step": 2400
         }
@@ -3801,7 +3802,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": "",
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
@@ -3810,7 +3811,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "Mimir",
           "value": "Mimir"
         },
@@ -3861,8 +3862,8 @@
         "allFormat": "glob",
         "current": {
           "selected": false,
-          "text": "63218b186047",
-          "value": "63218b186047"
+          "text": "0193e6a97945",
+          "value": "0193e6a97945"
         },
         "datasource": {
           "type": "prometheus",
@@ -3988,6 +3989,6 @@
   "timezone": "browser",
   "title": "JVM (Micrometer)",
   "uid": "dN7v-xPVz",
-  "version": 4,
+  "version": 1,
   "weekStart": ""
 }
