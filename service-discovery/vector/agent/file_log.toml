@@ -40,8 +40,7 @@ field = "T"
 namespace = "service"
 name = "count"
     [transforms.service_file_2_metric.metrics.tags]
-    host = "{{host}}"
-    H = "{{H}}"
+    hotel = "{{H}}"
 [[transforms.service_file_2_metric.metrics]]
 type = "counter"
 field = "T"
@@ -49,5 +48,4 @@ namespace = "service"
 name = "total"
 increment_by_value = true
     [transforms.service_file_2_metric.metrics.tags]
-    host = "{{host}}"
-    H = "{{H}}"
+    hotel = "{{H}}"
