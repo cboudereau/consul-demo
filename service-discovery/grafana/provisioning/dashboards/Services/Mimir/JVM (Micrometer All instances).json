@@ -1003,7 +1003,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_config_max{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "tomcat_threads_config_max{job=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1017,7 +1017,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_busy{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_busy{job=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1031,7 +1031,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_current{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_current{job=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1045,7 +1045,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_config_max{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_config_max{job=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1532,7 +1532,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(jvm_memory_max{job=\"$job\", env=\"$env\", instance=\"$instance\", area=\"heap\"})",
+          "expr": "sum(jvm_memory_max{job=\"$job\", env=\"$env\", area=\"heap\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -2625,8 +2625,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2813,8 +2812,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2999,8 +2997,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3105,8 +3102,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3238,8 +3234,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3384,8 +3379,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3490,8 +3484,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3625,8 +3618,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3748,8 +3740,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3855,8 +3846,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3978,8 +3968,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -4217,6 +4206,6 @@
   "timezone": "browser",
   "title": "JVM (Micrometer All instances)",
   "uid": "c8b8ff43-5ca2-4a92-b782-b27b043ce677",
-  "version": 6,
+  "version": 1,
   "weekStart": ""
 }

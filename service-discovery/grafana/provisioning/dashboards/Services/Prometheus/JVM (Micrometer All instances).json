@@ -828,7 +828,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -989,7 +989,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_current{job=\"$job\", env=\"$env\"}",
+          "expr": "tomcat_threads_current_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1003,7 +1003,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_config_max{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "tomcat_threads_config_max_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1017,7 +1017,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_busy{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_busy_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1031,7 +1031,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_current{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_current_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1045,7 +1045,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_config_max{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_config_max_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1136,7 +1136,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1210,7 +1211,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_committed{job=\"$job\", env=\"$env\"})",
+          "expr": "sum by (instance) (jvm_memory_committed_bytes{application=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.committed",
@@ -1224,7 +1225,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_max{job=\"$job\", env=\"$env\"})",
+          "expr": "sum by (instance) (jvm_memory_max_bytes{application=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.max",
@@ -1289,7 +1290,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1442,7 +1444,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1515,7 +1518,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_committed{job=\"$job\", env=\"$env\", area=\"heap\"})",
+          "expr": "sum by (instance) (jvm_memory_committed_bytes{application=\"$job\", env=\"$env\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.committed",
@@ -1529,7 +1532,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(jvm_memory_max{job=\"$job\", env=\"$env\", instance=\"$instance\", area=\"heap\"})",
+          "expr": "sum(jvm_memory_max_bytes{application=\"$job\", env=\"$env\", area=\"heap\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1623,7 +1626,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1684,7 +1688,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_cpu_usage{job=\"$job\", env=\"$env\"}",
+          "expr": "process_cpu_usage{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1698,7 +1702,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "avg_over_time(process_cpu_usage{job=\"$job\", env=\"$env\"}[1h])",
+          "expr": "avg_over_time(process_cpu_usage{application=\"$job\", env=\"$env\"}[1h])",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1764,7 +1768,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1837,7 +1842,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "system_cpu_count{job=\"$job\", env=\"$env\"}",
+          "expr": "system_cpu_count{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.cpus",
@@ -1902,7 +1907,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2056,7 +2062,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2257,7 +2264,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2448,7 +2456,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2616,7 +2625,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2803,7 +2813,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2988,7 +2999,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3093,7 +3105,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3101,7 +3114,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": [
           {
@@ -3225,7 +3238,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3370,7 +3384,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3475,7 +3490,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3609,7 +3625,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3731,7 +3748,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3837,7 +3855,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -3959,7 +3978,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4197,6 +4217,6 @@
   "timezone": "browser",
   "title": "JVM (Micrometer All instances)",
   "uid": "c8b8ff43-5ca2-4a92-b782-b27b043ce676",
-  "version": 9,
+  "version": 3,
   "weekStart": ""
 }
