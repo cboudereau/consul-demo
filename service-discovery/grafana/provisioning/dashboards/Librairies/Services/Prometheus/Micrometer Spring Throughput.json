@@ -793,7 +793,12 @@
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "prometheus",
+    "pull",
+    "loki",
+    "spring"
+  ],
   "templating": {
     "list": [
       {
@@ -848,8 +853,8 @@
       {
         "current": {
           "selected": false,
-          "text": "63218b186047",
-          "value": "63218b186047"
+          "text": "01c313846d48",
+          "value": "01c313846d48"
         },
         "datasource": {
           "type": "prometheus",
