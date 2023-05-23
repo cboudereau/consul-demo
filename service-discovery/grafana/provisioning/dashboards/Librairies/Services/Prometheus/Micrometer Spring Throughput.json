@@ -202,12 +202,29 @@
       "type": "stat"
     },
     {
-      "columns": [],
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
       },
-      "fontSize": "100%",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
       "gridPos": {
         "h": 8,
         "w": 22,
@@ -215,54 +232,42 @@
         "y": 8
       },
       "hideTimeOverride": false,
-      "id": 26,
+      "id": 32,
       "links": [],
-      "scroll": true,
-      "showHeader": true,
-      "sort": {
-        "col": 0,
-        "desc": true
-      },
-      "styles": [
-        {
-          "alias": "Time",
-          "align": "auto",
-          "dateFormat": "YYYY-MM-DD HH:mm:ss",
-          "pattern": "Time",
-          "type": "date"
-        },
-        {
-          "alias": "",
-          "align": "auto",
-          "colors": [
-            "rgba(245, 54, 54, 0.9)",
-            "rgba(237, 129, 40, 0.89)",
-            "rgba(50, 172, 45, 0.97)"
+      "options": {
+        "displayMode": "lcd",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
           ],
-          "decimals": 2,
-          "pattern": "/.*/",
-          "thresholds": [],
-          "type": "number",
-          "unit": "short"
-        }
-      ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true
+      },
+      "pluginVersion": "9.4.7",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "http_server_requests_seconds_bucket{application=\"$application\", host=\"$host\", le=\"0.05\"}",
-          "format": "table",
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "sum(http_server_requests_seconds{application=\"$application\", host=\"$host\"}) by (quantile)",
+          "format": "time_series",
           "instant": true,
           "intervalFactor": 1,
-          "legendFormat": "",
+          "legendFormat": "__auto",
+          "range": false,
           "refId": "A"
         }
       ],
-      "title": "Number Requests that missed 50ms SLA",
-      "transform": "table",
-      "type": "table-old"
+      "title": "Response time",
+      "type": "bargauge"
     },
     {
       "datasource": {
@@ -853,8 +858,8 @@
       {
         "current": {
           "selected": false,
-          "text": "01c313846d48",
-          "value": "01c313846d48"
+          "text": "5fdd7b851182",
+          "value": "5fdd7b851182"
         },
         "datasource": {
           "type": "prometheus",
