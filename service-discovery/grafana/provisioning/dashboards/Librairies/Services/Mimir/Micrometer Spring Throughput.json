@@ -83,7 +83,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
@@ -97,7 +97,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -353,7 +353,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
@@ -367,7 +367,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -674,12 +674,17 @@
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "otlp",
+    "loki",
+    "spring",
+    "push"
+  ],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "Mimir",
           "value": "Mimir"
         },
@@ -729,8 +734,8 @@
       {
         "current": {
           "selected": false,
-          "text": "7bfd6e12f084",
-          "value": "7bfd6e12f084"
+          "text": "01c313846d48",
+          "value": "01c313846d48"
         },
         "datasource": {
           "type": "prometheus",

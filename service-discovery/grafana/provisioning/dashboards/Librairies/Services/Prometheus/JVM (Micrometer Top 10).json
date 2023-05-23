@@ -103,7 +103,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -138,7 +138,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "min(process_uptime{job=\"$job\", env=\"$env\"})",
+          "expr": "min(process_uptime_seconds{application=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -148,7 +148,7 @@
           "step": 14400
         }
       ],
-      "title": "Uptime",
+      "title": "Uptime (min)",
       "type": "stat"
     },
     {
@@ -196,7 +196,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [
@@ -264,7 +264,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_used{job=\"$job\", area=\"heap\", env=\"$env\"})*100/sum by (instance) (jvm_memory_max{job=\"$job\", area=\"heap\", env=\"$env\"})",
+          "expr": "topk(10, sum by (instance) (jvm_memory_used_bytes{application=\"$job\", area=\"heap\", env=\"$env\"})*100/sum by (instance) (jvm_memory_max_bytes{application=\"$job\", area=\"heap\", env=\"$env\"}))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}",
@@ -321,7 +321,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [
@@ -399,7 +399,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_used{job=\"$job\", env=\"$env\", area=\"nonheap\"})*100/sum by(instance) (jvm_memory_max{job=\"$job\", env=\"$env\", area=\"nonheap\"})",
+          "expr": "topk(10, sum by (instance) (jvm_memory_used_bytes{application=\"$job\", env=\"$env\", area=\"nonheap\"})*100/sum by(instance) (jvm_memory_max_bytes{application=\"$job\", env=\"$env\", area=\"nonheap\"}))",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "__auto",
@@ -480,7 +480,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "min(process_start_time{job=\"$job\", env=\"$env\"})",
+          "expr": "min(process_start_time_seconds{application=\"$job\", env=\"$env\"})*1000",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
@@ -490,7 +490,7 @@
           "step": 14400
         }
       ],
-      "title": "Start time",
+      "title": "Start time (min)",
       "type": "stat"
     },
     {
@@ -563,7 +563,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -617,7 +617,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by(instance) (rate(http_server_requests_count{job=\"$job\", env=\"$env\"}[1m]))",
+          "expr": "sum by(instance) (rate(http_server_requests_seconds_count{application=\"$job\", env=\"$env\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{instance}}",
@@ -672,7 +672,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -755,7 +755,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (rate(http_server_requests_count{job=\"$job\", env=\"$env\", status=~\"5..\"}[1m]))",
+          "expr": "sum by (instance) (rate(http_server_requests_seconds_count{application=\"$job\", env=\"$env\", status=~\"5..\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "__auto",
@@ -810,7 +810,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -828,7 +828,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": []
       },
@@ -864,7 +864,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (rate(http_server_requests_sum{job=\"$job\", env=\"$env\", status!~\"5..\"}[1m]))/sum by (instance) (rate(http_server_requests_count{job=\"$job\", env=\"$env\", status!~\"5..\"}[1m]))",
+          "expr": "sum by (instance) (rate(http_server_requests_seconds_sum{application=\"$job\", env=\"$env\", status!~\"5..\"}[1m]))/sum by (instance) (rate(http_server_requests_seconds_count{application=\"$job\", env=\"$env\", status!~\"5..\"}[1m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -921,7 +921,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -975,7 +975,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_busy{job=\"$job\", env=\"$env\"}",
+          "expr": "tomcat_threads_busy_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -989,7 +989,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_current{job=\"$job\", env=\"$env\"}",
+          "expr": "tomcat_threads_current_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1003,7 +1003,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_config_max{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "tomcat_threads_config_max_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1017,7 +1017,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_busy{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_busy_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1031,7 +1031,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_current{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_current_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1045,7 +1045,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_config_max{job=\"$job\", env=\"$env\", instance=\"$instance\"}",
+          "expr": "jetty_threads_config_max_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1127,7 +1127,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -1136,8 +1136,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1196,7 +1195,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_used{job=\"$job\", env=\"$env\"})",
+          "expr": "sum by (instance) (jvm_memory_used_bytes{application=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.used",
@@ -1211,7 +1210,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_committed{job=\"$job\", env=\"$env\"})",
+          "expr": "sum by (instance) (jvm_memory_committed_bytes{application=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.committed",
@@ -1225,7 +1224,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_max{job=\"$job\", env=\"$env\"})",
+          "expr": "sum by (instance) (jvm_memory_max_bytes{application=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.max",
@@ -1281,7 +1280,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -1290,8 +1289,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1349,7 +1347,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_used{job=\"$job\", env=\"$env\", area=\"nonheap\"})",
+          "expr": "sum by (instance) (jvm_memory_used_bytes{application=\"$job\", env=\"$env\", area=\"nonheap\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -1435,7 +1433,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -1444,8 +1442,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1503,7 +1500,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_used{job=\"$job\", env=\"$env\", area=\"heap\"})",
+          "expr": "sum by (instance) (jvm_memory_used_bytes{application=\"$job\", env=\"$env\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.used",
@@ -1518,7 +1515,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum by (instance) (jvm_memory_committed{job=\"$job\", env=\"$env\", area=\"heap\"})",
+          "expr": "sum by (instance) (jvm_memory_committed_bytes{application=\"$job\", env=\"$env\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.committed",
@@ -1532,7 +1529,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(jvm_memory_max{job=\"$job\", env=\"$env\", instance=\"$instance\", area=\"heap\"})",
+          "expr": "sum(jvm_memory_max_bytes{application=\"$job\", env=\"$env\", area=\"heap\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -1616,7 +1613,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -1626,8 +1623,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1672,7 +1668,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "system_cpu_usage{job=\"$job\", env=\"$env\"}",
+          "expr": "system_cpu_usage{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1688,7 +1684,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_cpu_usage{job=\"$job\", env=\"$env\"}",
+          "expr": "process_cpu_usage{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1702,7 +1698,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "avg_over_time(process_cpu_usage{job=\"$job\", env=\"$env\"}[1h])",
+          "expr": "avg_over_time(process_cpu_usage{application=\"$job\", env=\"$env\"}[1h])",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -1759,7 +1755,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -1768,8 +1764,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1827,7 +1822,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "system_load_average_1m{job=\"$job\", env=\"$env\"}",
+          "expr": "system_load_average_1m{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.system-1m",
@@ -1842,7 +1837,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "system_cpu_count{job=\"$job\", env=\"$env\"}",
+          "expr": "system_cpu_count{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.cpus",
@@ -1898,7 +1893,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -1907,8 +1902,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1953,7 +1947,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_threads_live{job=\"$job\", env=\"$env\"}",
+          "expr": "jvm_threads_live_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.live",
@@ -1968,7 +1962,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_threads_daemon{job=\"$job\", env=\"$env\"}",
+          "expr": "jvm_threads_daemon_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.daemon",
@@ -1983,7 +1977,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_threads_peak{job=\"$job\", env=\"$env\"}",
+          "expr": "jvm_threads_peak_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.peak",
@@ -1997,7 +1991,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_threads{job=\"$job\", env=\"$env\"}",
+          "expr": "process_threads_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2054,7 +2048,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -2062,8 +2056,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2199,7 +2192,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_threads_states{job=\"$job\", env=\"$env\"}",
+          "expr": "jvm_threads_states_threads{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}..{{state}}",
@@ -2255,7 +2248,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -2264,8 +2257,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2386,7 +2378,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "increase(logback_events{job=\"$job\", env=\"$env\"}[1m])",
+          "expr": "increase(logback_events_total{application=\"$job\", env=\"$env\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
@@ -2446,7 +2438,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -2456,8 +2448,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2515,7 +2506,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_files_open{job=\"$job\", env=\"$env\"}",
+          "expr": "process_files_open_files{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -2531,7 +2522,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_files_max{job=\"$job\", env=\"$env\"}",
+          "expr": "process_files_max_files{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
@@ -2616,7 +2607,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -2625,8 +2616,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2685,7 +2675,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_used{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "jvm_memory_used_bytes{application=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2702,7 +2692,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_committed{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "jvm_memory_committed_bytes{application=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2719,7 +2709,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_max{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "jvm_memory_max_bytes{application=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2804,7 +2794,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -2813,8 +2803,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2871,7 +2860,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_used{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "expr": "jvm_memory_used_bytes{application=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2888,7 +2877,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_committed{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "expr": "jvm_memory_committed_bytes{application=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2905,7 +2894,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_max{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "expr": "jvm_memory_max_bytes{application=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -2990,7 +2979,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -2999,8 +2988,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3040,7 +3028,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(jvm_gc_pause_count{job=\"$job\", env=\"$env\"}[1m])",
+          "expr": "rate(jvm_gc_pause_seconds_count{application=\"$job\", env=\"$env\"}[1m])",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -3096,7 +3084,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -3105,8 +3093,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3114,7 +3101,7 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "s"
         },
         "overrides": [
           {
@@ -3159,7 +3146,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(jvm_gc_pause_sum{job=\"$job\", env=\"$env\"}[1m])/rate(jvm_gc_pause_count{job=\"$job\", env=\"$env\"}[1m])",
+          "expr": "rate(jvm_gc_pause_seconds_sum{application=\"$job\", env=\"$env\"}[1m])/rate(jvm_gc_pause_seconds_count{application=\"$job\", env=\"$env\"}[1m])",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -3173,7 +3160,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_gc_pause_max{job=\"$job\", env=\"$env\"}",
+          "expr": "jvm_gc_pause_seconds_max{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "hide": false,
           "instant": false,
@@ -3229,7 +3216,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -3238,8 +3225,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3279,7 +3265,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(jvm_gc_memory_allocated{job=\"$job\", env=\"$env\"}[1m])",
+          "expr": "rate(jvm_gc_memory_allocated_bytes_total{application=\"$job\", env=\"$env\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3293,7 +3279,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(jvm_gc_memory_promoted{job=\"$job\", env=\"$env\"}[1m])",
+          "expr": "rate(jvm_gc_memory_promoted_bytes_total{application=\"$job\", env=\"$env\"}[1m])",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3375,7 +3361,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -3384,8 +3370,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3425,7 +3410,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_classes_loaded{job=\"$job\", env=\"$env\"}",
+          "expr": "jvm_classes_loaded_classes{application=\"$job\", env=\"$env\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.loaded",
@@ -3482,7 +3467,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -3490,8 +3475,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3531,7 +3515,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "delta(jvm_classes_loaded{job=\"$job\", env=\"$env\"}[1m])",
+          "expr": "delta(jvm_classes_loaded_classes{application=\"$job\", env=\"$env\"}[1m])",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -3616,7 +3600,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -3625,8 +3609,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3666,7 +3649,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_memory_used{job=\"$job\", env=\"$env\", id=\"direct\"}",
+          "expr": "jvm_buffer_memory_used_bytes{application=\"$job\", env=\"$env\", id=\"direct\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.used",
@@ -3681,7 +3664,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_total_capacity{job=\"$job\", env=\"$env\", id=\"direct\"}",
+          "expr": "jvm_buffer_total_capacity_bytes{application=\"$job\", env=\"$env\", id=\"direct\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.capacity",
@@ -3739,7 +3722,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -3748,8 +3731,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3789,7 +3771,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_count{job=\"$job\", env=\"$env\", id=\"direct\"}",
+          "expr": "jvm_buffer_count_buffers{application=\"$job\", env=\"$env\", id=\"direct\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.count",
@@ -3846,7 +3828,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -3855,8 +3837,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3896,7 +3877,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_memory_used{job=\"$job\", env=\"$env\", id=\"mapped\"}",
+          "expr": "jvm_buffer_memory_used_bytes{application=\"$job\", env=\"$env\", id=\"mapped\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.used",
@@ -3911,7 +3892,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_total_capacity{job=\"$job\", env=\"$env\", id=\"mapped\"}",
+          "expr": "jvm_buffer_total_capacity_bytes{application=\"$job\", env=\"$env\", id=\"mapped\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.capacity",
@@ -3969,7 +3950,7 @@
             {
               "targetBlank": true,
               "title": "${__field.labels.instance} JVM (Micrometer)",
-              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+              "url": "http://localhost:3000/d/2QBAjbg4k/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
             }
           ],
           "mappings": [],
@@ -3978,8 +3959,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -4019,7 +3999,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_count{job=\"$job\", env=\"$env\", id=\"mapped\"}",
+          "expr": "jvm_buffer_count_buffers{application=\"$job\", env=\"$env\", id=\"mapped\"}",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "{{instance}}.count",
@@ -4037,14 +4017,17 @@
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "prometheus",
+    "pull"
+  ],
   "templating": {
     "list": [
       {
         "current": {
           "selected": false,
-          "text": "Mimir",
-          "value": "Mimir"
+          "text": "Prometheus",
+          "value": "Prometheus"
         },
         "hide": 2,
         "includeAll": false,
@@ -4068,7 +4051,7 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(job)",
+        "definition": "label_values(application)",
         "hide": 0,
         "includeAll": false,
         "label": "Application",
@@ -4076,8 +4059,8 @@
         "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(job)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          "query": "label_values(application)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 2,
         "regex": "",
@@ -4129,7 +4112,7 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(jvm_memory_used{job=\"$job\", area=\"heap\"},id)",
+        "definition": "label_values(jvm_memory_used_bytes{application=\"$job\", area=\"heap\"},id)",
         "hide": 2,
         "includeAll": true,
         "label": "JVM Memory Pools Heap",
@@ -4138,8 +4121,8 @@
         "name": "jvm_memory_pool_heap",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used{job=\"$job\", area=\"heap\"},id)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          "query": "label_values(jvm_memory_used_bytes{application=\"$job\", area=\"heap\"},id)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 1,
         "regex": "",
@@ -4161,7 +4144,7 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(jvm_memory_used{job=\"$job\", area=\"nonheap\"},id)",
+        "definition": "label_values(jvm_memory_used_bytes{application=\"$job\", area=\"nonheap\"},id)",
         "hide": 2,
         "includeAll": true,
         "label": "JVM Memory Pools Non-Heap",
@@ -4170,8 +4153,8 @@
         "name": "jvm_memory_pool_nonheap",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used{job=\"$job\", area=\"nonheap\"},id)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          "query": "label_values(jvm_memory_used_bytes{application=\"$job\", area=\"nonheap\"},id)",
+          "refId": "StandardVariableQuery"
         },
         "refresh": 1,
         "regex": "",
@@ -4215,8 +4198,8 @@
     ]
   },
   "timezone": "browser",
-  "title": "JVM (Micrometer All instances)",
-  "uid": "c8b8ff43-5ca2-4a92-b782-b27b043ce677",
-  "version": 6,
+  "title": "JVM (Micrometer Top 10)",
+  "uid": "c8b8ff43-5ca2-4a92-b782-b27b043ce676",
+  "version": 1,
   "weekStart": ""
 }

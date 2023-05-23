@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.opentelemetry.extension.annotations.WithSpan;
 
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,9 @@ import lombok.Value;
 
 @RestController
 public class Controllers {
-	Logger logger = LoggerFactory.getLogger(Controllers.class);
+	private static final Logger logger = LoggerFactory.getLogger(Controllers.class);
+	private static final Logger customLogger = LoggerFactory.getLogger("custom_logger");
+	private static final Random random = new Random(0);
 	@Value
     static class User {
 		public User(final String name, final String surname) {
@@ -28,8 +32,16 @@ public class Controllers {
 		return new User("Spring", "Guru");
 	}
 
+	private static int getRandom(int min, int max) {
+		return random.nextInt(max - min + 1) + min;
+	}
+
 	@GetMapping(path="/user")
     User getUser() {
+		int hotel = getRandom(1000, 1500); 
+		int timing = getRandom(100, 10000);
+		
+		customLogger.info("H={}\tT={}", hotel, timing);
 		logger.info("/user has been called!");
 		return getSpringGuruUser();
 	}

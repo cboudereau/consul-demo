@@ -24,10 +24,10 @@
       {
         "datasource": {
           "type": "prometheus",
-          "uid": "prometheus"
+          "uid": "${datasource}"
         },
         "enable": true,
-        "expr": "resets(process_uptime_seconds{application=\"$application\", instance=\"$instance\"}[1m]) > 0",
+        "expr": "resets(process_uptime_seconds{job=\"$job\"}[1m]) > 0",
         "iconColor": "rgba(255, 96, 96, 1)",
         "name": "Restart Detection",
         "showIn": 0,
@@ -43,7 +43,6 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 4701,
   "graphTooltip": 1,
-  "id": 5,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -51,7 +50,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
@@ -65,7 +64,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -81,7 +80,7 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "fixed"
           },
           "decimals": 1,
           "mappings": [
@@ -101,10 +100,6 @@
               {
                 "color": "green",
                 "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -143,17 +138,17 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_uptime{application=\"$application\", instance=\"$instance\"}",
+          "expr": "min(process_uptime{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "",
+          "legendFormat": "{{instance}}",
           "metric": "",
           "range": true,
           "refId": "A",
           "step": 14400
         }
       ],
-      "title": "Uptime",
+      "title": "Uptime (min)",
       "type": "stat"
     },
     {
@@ -164,91 +159,46 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "dateTimeAsIso"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 6,
-        "y": 1
-      },
-      "id": 92,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "process_start_time{application=\"$application\", instance=\"$instance\"}",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "",
-          "metric": "",
-          "range": true,
-          "refId": "A",
-          "step": 14400
-        }
-      ],
-      "title": "Start time",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
           },
           "decimals": 2,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [
             {
               "options": {
@@ -282,29 +232,31 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 12,
+        "h": 6,
+        "w": 9,
+        "x": 6,
         "y": 1
       },
       "id": 65,
       "links": [],
       "maxDataPoints": 100,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
+        "legend": {
           "calcs": [
-            "lastNotNull"
+            "max"
           ],
-          "fields": "",
-          "values": false
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
         },
-        "textMode": "auto"
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -312,17 +264,17 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(jvm_memory_used{application=\"$application\", instance=\"$instance\", area=\"heap\"})*100/sum(jvm_memory_max{application=\"$application\",instance=\"$instance\", area=\"heap\"})",
+          "expr": "topk(10, sum by (instance) (jvm_memory_used{job=\"$job\", area=\"heap\", env=\"$env\"})*100/sum by (instance) (jvm_memory_max{job=\"$job\", area=\"heap\", env=\"$env\"}))",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "",
+          "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A",
           "step": 14400
         }
       ],
       "title": "Heap used",
-      "type": "stat"
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -332,9 +284,46 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "decimals": 2,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [
             {
               "options": {
@@ -378,12 +367,95 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
-        "w": 6,
-        "x": 18,
+        "h": 6,
+        "w": 9,
+        "x": 15,
         "y": 1
       },
       "id": 75,
+      "links": [],
+      "maxDataPoints": 100,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Max",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "topk(10, sum by (instance) (jvm_memory_used{job=\"$job\", env=\"$env\", area=\"nonheap\"})*100/sum by(instance) (jvm_memory_max{job=\"$job\", env=\"$env\", area=\"nonheap\"}))",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "step": 14400
+        }
+      ],
+      "title": "Non-Heap used",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "match": "null",
+                "result": {
+                  "text": "N/A"
+                }
+              },
+              "type": "special"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "dateTimeAsIso"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 4
+      },
+      "id": 92,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -408,29 +480,30 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(jvm_memory_used{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})*100/sum(jvm_memory_max{application=\"$application\",instance=\"$instance\", area=\"nonheap\"})",
+          "expr": "min(process_start_time{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
           "legendFormat": "",
+          "metric": "",
           "range": true,
           "refId": "A",
           "step": 14400
         }
       ],
-      "title": "Non-Heap used",
+      "title": "Start time (min)",
       "type": "stat"
     },
     {
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 4
+        "y": 7
       },
       "id": 126,
       "panels": [],
@@ -438,7 +511,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -486,6 +559,13 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
@@ -506,10 +586,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 6,
+        "h": 5,
+        "w": 12,
         "x": 0,
-        "y": 5
+        "y": 8
       },
       "id": 111,
       "links": [],
@@ -518,16 +598,18 @@
           "calcs": [
             "lastNotNull"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -535,10 +617,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(http_server_requests_count{application=\"$application\", instance=\"$instance\"}[1m]))",
+          "expr": "topk(10, sum by(instance) (rate(http_server_requests_count{job=\"$job\", env=\"$env\"}[1m])))",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "HTTP",
+          "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
         }
@@ -586,6 +668,13 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
@@ -637,10 +726,10 @@
         ]
       },
       "gridPos": {
-        "h": 7,
-        "w": 6,
-        "x": 6,
-        "y": 5
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 8
       },
       "id": 112,
       "links": [],
@@ -658,7 +747,7 @@
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -666,15 +755,15 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(http_server_requests_count{application=\"$application\", instance=\"$instance\", status=~\"5..\"}[1m]))",
+          "expr": "topk(10, sum by (instance) (rate(http_server_requests_count{job=\"$job\", env=\"$env\", status=~\"5..\"}[1m])))",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "HTTP - 5xx",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Errors",
+      "title": "Errors 5xx",
       "type": "timeseries"
     },
     {
@@ -717,6 +806,13 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
@@ -738,9 +834,9 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
-        "x": 12,
-        "y": 5
+        "w": 12,
+        "x": 0,
+        "y": 13
       },
       "id": 113,
       "links": [],
@@ -749,16 +845,18 @@
           "calcs": [
             "lastNotNull"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -766,30 +864,16 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(rate(http_server_requests_sum{application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))/sum(rate(http_server_requests_count{application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))",
+          "expr": "topk(10, sum by (instance) (rate(http_server_requests_sum{job=\"$job\", env=\"$env\", status!~\"5..\"}[1m]))/sum by (instance) (rate(http_server_requests_count{job=\"$job\", env=\"$env\", status!~\"5..\"}[1m])))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "HTTP - AVG",
+          "legendFormat": "{{instance}}",
           "range": true,
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "max(http_server_requests{application=\"$application\", instance=\"$instance\", status!~\"5..\"})",
-          "format": "time_series",
-          "hide": false,
-          "intervalFactor": 1,
-          "legendFormat": "HTTP - MAX",
-          "range": true,
-          "refId": "B"
         }
       ],
-      "title": "Duration",
+      "title": "Duration (avg)",
       "type": "timeseries"
     },
     {
@@ -833,6 +917,13 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
@@ -854,9 +945,9 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
-        "x": 18,
-        "y": 5
+        "w": 12,
+        "x": 12,
+        "y": 13
       },
       "id": 119,
       "links": [],
@@ -865,16 +956,18 @@
           "calcs": [
             "lastNotNull"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -882,11 +975,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_busy{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, tomcat_threads_busy{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "TOMCAT - BSY",
+          "legendFormat": "{{instance}}.tomcat.busy",
           "range": true,
           "refId": "A"
         },
@@ -896,11 +989,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_current{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, tomcat_threads_current{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "TOMCAT - CUR",
+          "legendFormat": "{{instance}}.tomcat.current",
           "range": true,
           "refId": "B"
         },
@@ -910,11 +1003,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "tomcat_threads_config_max{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, tomcat_threads_config_max{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "TOMCAT - MAX",
+          "legendFormat": "{{instance}}.tomcat.max",
           "range": true,
           "refId": "C"
         },
@@ -924,11 +1017,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_busy{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, jetty_threads_busy{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "JETTY - BSY",
+          "legendFormat": "{{instance}}.jetty.busy",
           "range": true,
           "refId": "D"
         },
@@ -937,11 +1030,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jetty_threads_current{application=\"$application\", instance=\"$instance\"}",
+          "editorMode": "code",
+          "expr": "topk(10, jetty_threads_current{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "JETTY - CUR",
+          "legendFormat": "{{instance}}.jetty.current",
+          "range": true,
           "refId": "E"
         },
         {
@@ -950,11 +1045,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jetty_threads_config_max{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, jetty_threads_config_max{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "JETTY - MAX",
+          "legendFormat": "{{instance}}.jetty.max",
           "range": true,
           "refId": "F"
         }
@@ -966,13 +1061,13 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 20
       },
       "id": 127,
       "panels": [],
@@ -980,7 +1075,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -1028,14 +1123,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1045,276 +1146,26 @@
           },
           "unit": "bytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*\\.max/"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 7,
-        "w": 6,
+        "h": 14,
+        "w": 12,
         "x": 0,
-        "y": 13
-      },
-      "id": 24,
-      "links": [],
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "sum(jvm_memory_used{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "used",
-          "metric": "",
-          "range": true,
-          "refId": "A",
-          "step": 2400
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "sum(jvm_memory_committed{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "committed",
-          "range": true,
-          "refId": "B",
-          "step": 2400
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "sum(jvm_memory_max{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "max",
-          "range": true,
-          "refId": "C",
-          "step": 2400
-        }
-      ],
-      "title": "JVM Heap",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 6,
-        "x": 6,
-        "y": 13
-      },
-      "id": 25,
-      "links": [],
-      "options": {
-        "legend": {
-          "calcs": [
-            "lastNotNull",
-            "max"
-          ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "9.4.7",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "sum(jvm_memory_used{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 2,
-          "legendFormat": "used",
-          "metric": "",
-          "range": true,
-          "refId": "A",
-          "step": 2400
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "sum(jvm_memory_committed{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "committed",
-          "range": true,
-          "refId": "B",
-          "step": 2400
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "sum(jvm_memory_max{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "max",
-          "range": true,
-          "refId": "C",
-          "step": 2400
-        }
-      ],
-      "title": "JVM Non-Heap",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${datasource}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 6,
-        "x": 12,
-        "y": 13
+        "y": 21
       },
       "id": 26,
       "links": [],
@@ -1322,18 +1173,21 @@
         "legend": {
           "calcs": [
             "lastNotNull",
-            "max"
+            "max",
+            "mean"
           ],
-          "displayMode": "list",
+          "displayMode": "table",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -1341,10 +1195,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(jvm_memory_used{application=\"$application\", instance=\"$instance\"})",
+          "expr": "topk(10, sum by (instance) (jvm_memory_used{job=\"$job\", env=\"$env\"}))",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "used",
+          "legendFormat": "{{instance}}.used",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -1356,10 +1210,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(jvm_memory_committed{application=\"$application\", instance=\"$instance\"})",
+          "expr": "topk(10, sum by (instance) (jvm_memory_committed{job=\"$job\", env=\"$env\"}))",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "committed",
+          "legendFormat": "{{instance}}.committed",
           "range": true,
           "refId": "B",
           "step": 2400
@@ -1370,10 +1224,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(jvm_memory_max{application=\"$application\", instance=\"$instance\"})",
+          "expr": "topk(10, sum by (instance) (jvm_memory_max{job=\"$job\", env=\"$env\"}))",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "max",
+          "legendFormat": "{{instance}}.max",
           "range": true,
           "refId": "C",
           "step": 2400
@@ -1422,14 +1276,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1439,15 +1299,28 @@
           },
           "unit": "bytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*\\.max/"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
-        "x": 18,
-        "y": 13
+        "w": 12,
+        "x": 12,
+        "y": 21
       },
-      "id": 86,
+      "id": 25,
       "links": [],
       "options": {
         "legend": {
@@ -1455,16 +1328,18 @@
             "lastNotNull",
             "max"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -1472,11 +1347,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_memory_vss{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, sum by (instance) (jvm_memory_used{job=\"$job\", env=\"$env\", area=\"nonheap\"}))",
           "format": "time_series",
-          "hide": true,
+          "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "vss",
+          "legendFormat": "{{instance}}.used",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -1488,12 +1363,13 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_memory_rss{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, sum(jvm_memory_committed{job=\"$job\", env=\"$env\", instance=\"$instance\", area=\"nonheap\"}))",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "rss",
+          "legendFormat": "{{instance}}.committed",
           "range": true,
-          "refId": "B"
+          "refId": "B",
+          "step": 2400
         },
         {
           "datasource": {
@@ -1501,41 +1377,182 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_memory_swap{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, sum(jvm_memory_max{job=\"$job\", env=\"$env\", instance=\"$instance\", area=\"nonheap\"}))",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "swap",
+          "legendFormat": "{{instance}}.max",
           "range": true,
-          "refId": "C"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "process_memory_rss{application=\"$application\", instance=\"$instance\"} + process_memory_swap{application=\"$application\", instance=\"$instance\"}",
-          "format": "time_series",
-          "intervalFactor": 2,
-          "legendFormat": "total",
-          "range": true,
-          "refId": "D"
+          "refId": "C",
+          "step": 2400
         }
       ],
-      "title": "JVM Process Memory",
+      "title": "JVM Non-Heap",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*\\.max/"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "id": 24,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [
+            "lastNotNull",
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "topk(10, sum by (instance) (jvm_memory_used{job=\"$job\", env=\"$env\", area=\"heap\"}))",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "{{instance}}.used",
+          "metric": "",
+          "range": true,
+          "refId": "A",
+          "step": 2400
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "topk(10, sum by (instance) (jvm_memory_committed{job=\"$job\", env=\"$env\", area=\"heap\"}))",
+          "format": "time_series",
+          "intervalFactor": 2,
+          "legendFormat": "{{instance}}.committed",
+          "range": true,
+          "refId": "B",
+          "step": 2400
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "topk(10, sum(jvm_memory_max{job=\"$job\", env=\"$env\", area=\"heap\"}))",
+          "format": "time_series",
+          "hide": false,
+          "intervalFactor": 2,
+          "legendFormat": "{{instance}}.max",
+          "range": true,
+          "refId": "C",
+          "step": 2400
+        }
+      ],
+      "title": "JVM Heap",
       "type": "timeseries"
     },
     {
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 35
       },
       "id": 128,
       "panels": [],
@@ -1543,7 +1560,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -1592,6 +1609,13 @@
             }
           },
           "decimals": 1,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "max": 1,
           "min": 0,
@@ -1599,8 +1623,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1613,10 +1636,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 6,
+        "h": 8,
+        "w": 12,
         "x": 0,
-        "y": 21
+        "y": 36
       },
       "id": 106,
       "links": [],
@@ -1626,28 +1649,32 @@
             "lastNotNull",
             "max"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "system_cpu_usage{application=\"$application\", instance=\"$instance\"}",
+          "editorMode": "code",
+          "expr": "topk(10, system_cpu_usage{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "system",
+          "legendFormat": "{{instance}}.system",
           "metric": "",
+          "range": true,
           "refId": "A",
           "step": 2400
         },
@@ -1656,11 +1683,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "process_cpu_usage{application=\"$application\", instance=\"$instance\"}",
+          "editorMode": "code",
+          "expr": "topk(10, process_cpu_usage{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "process",
+          "legendFormat": "{{instance}}.process",
+          "range": true,
           "refId": "B"
         },
         {
@@ -1668,11 +1697,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "avg_over_time(process_cpu_usage{application=\"$application\", instance=\"$instance\"}[1h])",
+          "editorMode": "code",
+          "expr": "topk(10, avg_over_time(process_cpu_usage{job=\"$job\", env=\"$env\"}[1h]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "process-1h",
+          "legendFormat": "{{instance}}.process-1h",
+          "range": true,
           "refId": "C"
         }
       ],
@@ -1720,14 +1751,20 @@
             }
           },
           "decimals": 1,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1737,13 +1774,26 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*\\.cpus/"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 7,
-        "w": 6,
-        "x": 6,
-        "y": 21
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 36
       },
       "id": 93,
       "links": [],
@@ -1753,27 +1803,31 @@
             "lastNotNull",
             "max"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "system_load_average_1m{application=\"$application\", instance=\"$instance\"}",
+          "editorMode": "code",
+          "expr": "topk(10, system_load_average_1m{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "system-1m",
+          "legendFormat": "{{instance}}.system-1m",
           "metric": "",
+          "range": true,
           "refId": "A",
           "step": 2400
         },
@@ -1782,10 +1836,12 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "system_cpu_count{application=\"$application\", instance=\"$instance\"}",
+          "editorMode": "code",
+          "expr": "topk(10, system_cpu_count{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "cpus",
+          "legendFormat": "{{instance}}.cpus",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -1833,14 +1889,20 @@
             }
           },
           "decimals": 0,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -1854,9 +1916,9 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
-        "x": 12,
-        "y": 21
+        "w": 12,
+        "x": 0,
+        "y": 44
       },
       "id": 32,
       "links": [],
@@ -1866,16 +1928,18 @@
             "lastNotNull",
             "max"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -1883,10 +1947,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_threads_live{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, jvm_threads_live{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "live",
+          "legendFormat": "{{instance}}.live",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -1898,10 +1962,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_threads_daemon{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, jvm_threads_daemon{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "daemon",
+          "legendFormat": "{{instance}}.daemon",
           "metric": "",
           "range": true,
           "refId": "B",
@@ -1913,10 +1977,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_threads_peak{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, jvm_threads_peak{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "peak",
+          "legendFormat": "{{instance}}.peak",
           "range": true,
           "refId": "C",
           "step": 2400
@@ -1927,11 +1991,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, process_threads{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "process",
+          "legendFormat": "{{instance}}.process",
           "range": true,
           "refId": "D",
           "step": 2400
@@ -1980,13 +2044,19 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2091,9 +2161,9 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
-        "x": 18,
-        "y": 21
+        "w": 12,
+        "x": 12,
+        "y": 44
       },
       "id": 124,
       "links": [],
@@ -2103,16 +2173,18 @@
             "lastNotNull",
             "max"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -2120,10 +2192,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_threads_states{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, jvm_threads_states{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "{{state}}",
+          "legendFormat": "{{instance}}..{{state}}",
           "range": true,
           "refId": "A"
         }
@@ -2172,14 +2244,20 @@
             }
           },
           "decimals": 0,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2269,9 +2347,9 @@
       },
       "gridPos": {
         "h": 7,
-        "w": 18,
+        "w": 12,
         "x": 0,
-        "y": 28
+        "y": 51
       },
       "id": 91,
       "links": [],
@@ -2281,16 +2359,18 @@
             "lastNotNull",
             "max"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -2298,11 +2378,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "increase(logback_events{application=\"$application\", instance=\"$instance\"}[1m])",
+          "expr": "topk(10, increase(logback_events{job=\"$job\", env=\"$env\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "{{level}}",
+          "legendFormat": "{{instance}}.{{level}}",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -2354,14 +2434,21 @@
             }
           },
           "decimals": 0,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
+          "max": -2,
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2371,13 +2458,26 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*\\.max/"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
-        "w": 6,
-        "x": 18,
-        "y": 28
+        "w": 12,
+        "x": 12,
+        "y": 51
       },
       "id": 61,
       "links": [],
@@ -2387,16 +2487,18 @@
             "lastNotNull",
             "max"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -2404,11 +2506,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_files_open{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, process_files_open{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "open",
+          "legendFormat": "{{instance}}.open",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -2420,11 +2522,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "process_files_max{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, process_files_max{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 2,
-          "legendFormat": "max",
+          "legendFormat": "{{instance}}.max",
           "metric": "",
           "range": true,
           "refId": "B",
@@ -2438,13 +2540,13 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 58
       },
       "id": 129,
       "panels": [],
@@ -2453,7 +2555,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -2501,14 +2603,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2518,13 +2626,26 @@
           },
           "unit": "bytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*\\.max/"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 36
+        "y": 59
       },
       "id": 3,
       "links": [],
@@ -2534,16 +2655,18 @@
             "lastNotNull",
             "max"
           ],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": false,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "repeat": "jvm_memory_pool_heap",
       "targets": [
         {
@@ -2552,12 +2675,12 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_used{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "topk(10, jvm_memory_used{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "used",
+          "legendFormat": "{{instance}}.used",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -2569,12 +2692,12 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_committed{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "topk(10, jvm_memory_committed{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "commited",
+          "legendFormat": "{{instance}}.commited",
           "metric": "",
           "range": true,
           "refId": "B",
@@ -2586,12 +2709,12 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_max{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
+          "expr": "topk(10, jvm_memory_max{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_heap\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "max",
+          "legendFormat": "{{instance}}.max",
           "metric": "",
           "range": true,
           "refId": "C",
@@ -2605,13 +2728,13 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 43
+        "y": 66
       },
       "id": 130,
       "panels": [],
@@ -2619,7 +2742,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -2667,14 +2790,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2684,13 +2813,26 @@
           },
           "unit": "bytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*\\.max/"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 44
+        "y": 67
       },
       "id": 78,
       "links": [],
@@ -2702,14 +2844,14 @@
           ],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "repeat": "jvm_memory_pool_nonheap",
       "targets": [
         {
@@ -2718,12 +2860,12 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_used{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "expr": "topk(10, jvm_memory_used{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "used",
+          "legendFormat": "{{instance}}.used",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -2735,12 +2877,12 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_committed{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "expr": "topk(10, jvm_memory_committed{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "commited",
+          "legendFormat": "{{instance}}.commited",
           "metric": "",
           "range": true,
           "refId": "B",
@@ -2752,12 +2894,12 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_memory_max{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
+          "expr": "topk(10, jvm_memory_max{job=\"$job\", env=\"$env\", id=~\"$jvm_memory_pool_nonheap\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 2,
-          "legendFormat": "max",
+          "legendFormat": "{{instance}}.max",
           "metric": "",
           "range": true,
           "refId": "C",
@@ -2771,13 +2913,13 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 58
+        "y": 81
       },
       "id": 131,
       "panels": [],
@@ -2785,7 +2927,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -2833,14 +2975,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2856,7 +3004,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 59
+        "y": 82
       },
       "id": 98,
       "links": [],
@@ -2865,14 +3013,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -2880,11 +3028,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(jvm_gc_pause_count{application=\"$application\", instance=\"$instance\"}[1m])",
+          "expr": "topk(10, rate(jvm_gc_pause_count{job=\"$job\", env=\"$env\"}[1m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
-          "legendFormat": "{{action}} ({{cause}})",
+          "legendFormat": "{{instance}}.{{action}} ({{cause}})",
           "range": true,
           "refId": "A"
         }
@@ -2932,14 +3080,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2949,13 +3103,26 @@
           },
           "unit": "ms"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/.*\\.max/"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 59
+        "y": 82
       },
       "id": 101,
       "links": [],
@@ -2964,14 +3131,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -2979,12 +3146,12 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(jvm_gc_pause_sum{application=\"$application\", instance=\"$instance\"}[1m])/rate(jvm_gc_pause_count{application=\"$application\", instance=\"$instance\"}[1m])",
+          "expr": "topk(10, rate(jvm_gc_pause_sum{job=\"$job\", env=\"$env\"}[1m])/rate(jvm_gc_pause_count{job=\"$job\", env=\"$env\"}[1m]))",
           "format": "time_series",
           "hide": false,
           "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "avg {{action}} ({{cause}})",
+          "legendFormat": "{{instance}}.avg {{action}} ({{cause}})",
           "refId": "A"
         },
         {
@@ -2992,12 +3159,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_gc_pause_seconds_max{application=\"$application\", instance=\"$instance\"}",
+          "editorMode": "code",
+          "expr": "topk(10, jvm_gc_pause_max{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "hide": false,
           "instant": false,
           "intervalFactor": 1,
-          "legendFormat": "max {{action}} ({{cause}})",
+          "legendFormat": "{{instance}}.max {{action}} ({{cause}})",
           "refId": "B"
         }
       ],
@@ -3044,14 +3212,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3067,7 +3241,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 59
+        "y": 82
       },
       "id": 99,
       "links": [],
@@ -3076,14 +3250,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -3091,11 +3265,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(jvm_gc_memory_allocated{application=\"$application\", instance=\"$instance\"}[1m])",
+          "expr": "topk(10, rate(jvm_gc_memory_allocated{job=\"$job\", env=\"$env\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "allocated",
+          "legendFormat": "{{instance}}.allocated",
           "range": true,
           "refId": "A"
         },
@@ -3105,11 +3279,11 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(jvm_gc_memory_promoted{application=\"$application\", instance=\"$instance\"}[1m])",
+          "expr": "topk(10, rate(jvm_gc_memory_promoted{job=\"$job\", env=\"$env\"}[1m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "promoted",
+          "legendFormat": "{{instance}}.promoted",
           "range": true,
           "refId": "B"
         }
@@ -3121,13 +3295,13 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 66
+        "y": 89
       },
       "id": 132,
       "panels": [],
@@ -3135,7 +3309,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -3183,14 +3357,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3206,7 +3386,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 67
+        "y": 90
       },
       "id": 37,
       "links": [],
@@ -3215,14 +3395,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -3230,10 +3410,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_classes_loaded{application=\"$application\", instance=\"$instance\"}",
+          "expr": "topk(10, jvm_classes_loaded{job=\"$job\", env=\"$env\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "loaded",
+          "legendFormat": "{{instance}}.loaded",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -3283,13 +3463,19 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3305,7 +3491,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 67
+        "y": 90
       },
       "id": 38,
       "links": [],
@@ -3314,14 +3500,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -3329,12 +3515,12 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "delta(jvm_classes_loaded{application=\"$application\",instance=\"$instance\"}[1m])",
+          "expr": "topk(10, delta(jvm_classes_loaded{job=\"$job\", env=\"$env\"}[1m]))",
           "format": "time_series",
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "delta-1m",
+          "legendFormat": "{{instance}}.delta-1m",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -3348,13 +3534,13 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "${datasource}"
       },
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 74
+        "y": 97
       },
       "id": 133,
       "panels": [],
@@ -3362,7 +3548,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "${datasource}"
           },
           "refId": "A"
         }
@@ -3410,14 +3596,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3433,7 +3625,7 @@
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 75
+        "y": 98
       },
       "id": 33,
       "links": [],
@@ -3442,14 +3634,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -3457,10 +3649,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_memory_used{application=\"$application\", instance=\"$instance\", id=\"direct\"}",
+          "expr": "topk(10, jvm_buffer_memory_used{job=\"$job\", env=\"$env\", id=\"direct\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "used",
+          "legendFormat": "{{instance}}.used",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -3472,10 +3664,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_total_capacity{application=\"$application\", instance=\"$instance\", id=\"direct\"}",
+          "expr": "topk(10, jvm_buffer_total_capacity{job=\"$job\", env=\"$env\", id=\"direct\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "capacity",
+          "legendFormat": "{{instance}}.capacity",
           "metric": "",
           "range": true,
           "refId": "B",
@@ -3526,14 +3718,20 @@
             }
           },
           "decimals": 0,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3549,7 +3747,7 @@
         "h": 7,
         "w": 6,
         "x": 6,
-        "y": 75
+        "y": 98
       },
       "id": 83,
       "links": [],
@@ -3558,14 +3756,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -3573,10 +3771,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_count{application=\"$application\", instance=\"$instance\", id=\"direct\"}",
+          "expr": "topk(10, jvm_buffer_count{job=\"$job\", env=\"$env\", id=\"direct\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "count",
+          "legendFormat": "{{instance}}.count",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -3626,14 +3824,20 @@
               "mode": "off"
             }
           },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3649,7 +3853,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 75
+        "y": 98
       },
       "id": 85,
       "links": [],
@@ -3658,14 +3862,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -3673,10 +3877,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_memory_used{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
+          "expr": "topk(10, jvm_buffer_memory_used{job=\"$job\", env=\"$env\", id=\"mapped\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "used",
+          "legendFormat": "{{instance}}.used",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -3687,11 +3891,13 @@
             "type": "prometheus",
             "uid": "${datasource}"
           },
-          "expr": "jvm_buffer_total_capacity_bytes{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
+          "editorMode": "code",
+          "expr": "topk(10, jvm_buffer_total_capacity{job=\"$job\", env=\"$env\", id=\"mapped\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "capacity",
+          "legendFormat": "{{instance}}.capacity",
           "metric": "",
+          "range": true,
           "refId": "B",
           "step": 2400
         }
@@ -3740,14 +3946,20 @@
             }
           },
           "decimals": 0,
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "${__field.labels.instance} JVM (Micrometer)",
+              "url": "http://localhost:3000/d/dN7v-xPVz/jvm-micrometer?${__url_time_range}&var-job=$job&var-instance=${__field.labels.instance}&var-jvm_memory_pool_heap=All&var-jvm_memory_pool_nonheap=All"
+            }
+          ],
           "mappings": [],
           "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -3763,7 +3975,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 75
+        "y": 98
       },
       "id": 84,
       "links": [],
@@ -3772,14 +3984,14 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.0-cloud.2.f143d34",
       "targets": [
         {
           "datasource": {
@@ -3787,10 +3999,10 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "jvm_buffer_count{application=\"$application\", instance=\"$instance\", id=\"mapped\"}",
+          "expr": "topk(10, jvm_buffer_count{job=\"$job\", env=\"$env\", id=\"mapped\"})",
           "format": "time_series",
           "intervalFactor": 2,
-          "legendFormat": "count",
+          "legendFormat": "{{instance}}.count",
           "metric": "",
           "range": true,
           "refId": "A",
@@ -3801,22 +4013,24 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": "",
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "otlp",
+    "push"
+  ],
   "templating": {
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "Mimir",
           "value": "Mimir"
         },
         "hide": 2,
         "includeAll": false,
-        "label": "Datasource",
         "multi": false,
         "name": "datasource",
         "options": [],
@@ -3830,23 +4044,23 @@
       {
         "current": {
           "selected": false,
-          "text": "users-service",
-          "value": "users-service"
+          "text": "client",
+          "value": "client"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "",
+        "definition": "label_values(job)",
         "hide": 0,
         "includeAll": false,
         "label": "Application",
         "multi": false,
-        "name": "application",
+        "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(application)",
-          "refId": "Prometheus-application-Variable-Query"
+          "query": "label_values(job)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
         "regex": "",
@@ -3858,27 +4072,25 @@
         "useTags": false
       },
       {
-        "allFormat": "glob",
         "current": {
           "selected": false,
-          "text": "63218b186047",
-          "value": "63218b186047"
+          "text": "dev",
+          "value": "dev"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(jvm_memory_used{application=\"$application\"}, instance)",
+        "definition": "label_values(env)",
         "hide": 0,
         "includeAll": false,
-        "label": "Instance",
+        "label": "Environment",
         "multi": false,
-        "multiFormat": "glob",
-        "name": "instance",
+        "name": "env",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used{application=\"$application\"}, instance)",
-          "refId": "StandardVariableQuery"
+          "query": "label_values(env)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
         "regex": "",
@@ -3900,8 +4112,8 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(jvm_memory_used{application=\"$application\", instance=\"$instance\", area=\"heap\"},id)",
-        "hide": 0,
+        "definition": "label_values(jvm_memory_used{job=\"$job\", area=\"heap\"},id)",
+        "hide": 2,
         "includeAll": true,
         "label": "JVM Memory Pools Heap",
         "multi": false,
@@ -3909,8 +4121,8 @@
         "name": "jvm_memory_pool_heap",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used{application=\"$application\", instance=\"$instance\", area=\"heap\"},id)",
-          "refId": "StandardVariableQuery"
+          "query": "label_values(jvm_memory_used{job=\"$job\", area=\"heap\"},id)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
@@ -3932,8 +4144,8 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(jvm_memory_used{application=\"$application\", instance=\"$instance\", area=\"nonheap\"},id)",
-        "hide": 0,
+        "definition": "label_values(jvm_memory_used{job=\"$job\", area=\"nonheap\"},id)",
+        "hide": 2,
         "includeAll": true,
         "label": "JVM Memory Pools Non-Heap",
         "multi": false,
@@ -3941,8 +4153,8 @@
         "name": "jvm_memory_pool_nonheap",
         "options": [],
         "query": {
-          "query": "label_values(jvm_memory_used{application=\"$application\", instance=\"$instance\", area=\"nonheap\"},id)",
-          "refId": "StandardVariableQuery"
+          "query": "label_values(jvm_memory_used{job=\"$job\", area=\"nonheap\"},id)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
         "regex": "",
@@ -3956,7 +4168,7 @@
     ]
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -3986,8 +4198,8 @@
     ]
   },
   "timezone": "browser",
-  "title": "JVM (Micrometer)",
-  "uid": "dN7v-xPVz",
-  "version": 4,
+  "title": "JVM (Micrometer Top 10)",
+  "uid": "c8b8ff43-5ca2-4a92-b782-b27b043ce677",
+  "version": 2,
   "weekStart": ""
 }
