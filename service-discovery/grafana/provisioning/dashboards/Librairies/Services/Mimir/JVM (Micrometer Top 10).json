@@ -130,7 +130,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.2",
       "targets": [
         {
           "datasource": {
@@ -472,7 +472,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.2",
       "targets": [
         {
           "datasource": {
@@ -1136,7 +1136,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1289,7 +1290,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1442,7 +1444,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1623,7 +1626,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1764,7 +1768,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -4043,7 +4048,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "client",
           "value": "client"
         },
@@ -4051,7 +4056,7 @@
           "type": "prometheus",
           "uid": "${datasource}"
         },
-        "definition": "label_values(job)",
+        "definition": "label_values(application)",
         "hide": 0,
         "includeAll": false,
         "label": "Application",
@@ -4059,7 +4064,7 @@
         "name": "job",
         "options": [],
         "query": {
-          "query": "label_values(job)",
+          "query": "label_values(application)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
@@ -4200,6 +4205,6 @@
   "timezone": "browser",
   "title": "JVM (Micrometer Top 10)",
   "uid": "c8b8ff43-5ca2-4a92-b782-b27b043ce677",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
