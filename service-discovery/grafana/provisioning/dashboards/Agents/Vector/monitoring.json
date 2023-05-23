@@ -481,8 +481,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -574,8 +573,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -667,8 +665,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -760,8 +757,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -12600,7 +12596,10 @@
   "revision": 1,
   "schemaVersion": 38,
   "style": "dark",
-  "tags": [],
+  "tags": [
+    "agent",
+    "vector"
+  ],
   "templating": {
     "list": [
       {
@@ -12828,8 +12827,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Vector",
+  "title": "Agent Monitoring",
   "uid": "NzDtFbMVz",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
