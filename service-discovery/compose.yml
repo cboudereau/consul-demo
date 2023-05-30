@@ -111,6 +111,14 @@ services:
     networks:
       - bridge
 
+  mimir2:
+    image: grafana/mimir:2.8.0
+    volumes:
+      - ./mimir/mimir.yaml:/etc/mimir.yaml
+    command: --config.file=/etc/mimir.yaml
+    networks:
+      - bridge
+
   tempo:
     image: grafana/tempo:2.1.1
     volumes:
