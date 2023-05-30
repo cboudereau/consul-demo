@@ -2,6 +2,10 @@ receivers:
   filelog:
     include: [ /app/log/*.log ]
     storage: file_storage/client
+    attributes:
+      service.name: client
+      application: ${service.name}
+      host: ${env:HOSTNAME}
     operators:
       - type: key_value_parser
         delimiter: "="
@@ -14,6 +18,15 @@ receivers:
 exporters:
   file/no_rotation:
     path: /app/otelcontribcol.debug
+  loki:
+    endpoint: http://loki:3100/loki/api/v1/push
+
+processors:
+  attributes/loki:
+    actions:
+      - action: insert
+        key: loki.attribute.labels
+        value: H, host, application, service.name
 
 extensions:
   health_check:
@@ -27,4 +40,5 @@ service:
   pipelines:
     logs:
       receivers: [filelog]
-      exporters: [file/no_rotation]
+      processors: [attributes/loki]
+      exporters: [file/no_rotation, loki]
