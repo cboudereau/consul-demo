@@ -1,6 +1,7 @@
 package com.helloworld.service;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.opentelemetry.instrumentation.annotations.WithSpan;
@@ -37,11 +38,10 @@ public class Controllers {
 	}
 
 	@GetMapping(path="/user")
-    User getUser() {
-		int hotel = getRandom(1000, 1500); 
+    User getUser(@RequestParam("id") Integer id) {
 		int timing = getRandom(100, 10000);
 		
-		customLogger.info("H={}\tT={}", hotel, timing);
+		customLogger.info("H={}\tT={}", id, timing);
 		logger.info("/user has been called!");
 		return getSpringGuruUser();
 	}
