@@ -44,7 +44,7 @@ RUN mkdir -p /etc/otelcol-contrib && chown 1000:1000 /etc/otelcol-contrib
 USER 1000
 WORKDIR /app
 
-RUN mkdir -p /app/log
+RUN mkdir -p /app/log /app/logstate/client
 
 ADD --chown=1000:1000 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/${OTEL_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar ./opentelemetry-javaagent.jar
 

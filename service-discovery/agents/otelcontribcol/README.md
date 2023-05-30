@@ -11,3 +11,7 @@ https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/pkg/
 https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/logstransformprocessor
 
 https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/stanza/docs/types/parsers.md#complex-parsers
+
+## Log fingerprint/checkpoints
+
+storage : https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/storage/filestorage

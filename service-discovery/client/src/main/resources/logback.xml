@@ -26,7 +26,7 @@
         <file>log/client.log</file>
         <append>true</append>
         <encoder>
-            <pattern>timestamp=%d{yyyy/MM/dd HH:mm:ss.SSS}\t%msg%n</pattern>
+            <pattern>timestamp=%d{yyyy/MM/dd HH:mm:ss.SSSSSSSSS}\t%msg%n</pattern>
         </encoder>
     </appender>
 

@@ -50,6 +50,8 @@ services:
         - OTEL_JAVA_AGENT_VERSION=${OTEL_JAVA_AGENT_VERSION}
     networks:
       - bridge
+    volumes:
+      - ./agents/otelcontribcol/agent/:/etc/otelcol-contrib/:ro
     environment:
       # TODO set -log-level info instead of error when consul agent will be fixed https://developer.hashicorp.com/consul/docs/upgrading/upgrade-specific#deprecating-authentication-via-token-query-parameter
       - CONSUL_ARGS=-log-level error -log-json -retry-join consul-server
