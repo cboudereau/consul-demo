@@ -22,7 +22,7 @@ processors:
     actions:
       - action: insert
         key: loki.attribute.labels
-        value: H, host, application, service.name, service.namespace
+        value: H, host, application, service.name, service.namespace, kind, name
   attributes/app:
     actions:
       - action: insert
