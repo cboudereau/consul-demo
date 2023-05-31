@@ -61,4 +61,5 @@ service:
     logs/otelcontribcol:
       receivers: [filelog/agent]
       processors: [attributes/otelcontribcol, attributes/agent/loki]
-      exporters: [logging, loki]
+      # exporters: [logging, loki]
+      exporters: [loki]
