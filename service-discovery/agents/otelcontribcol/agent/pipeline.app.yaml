@@ -1,0 +1,38 @@
+
+receivers:
+  # client log parsing
+  filelog/client:
+    include: [ /app/log/*.log ]
+    storage: file_storage/client
+    attributes:
+      service.name: client
+      application: ${service.name}
+      host: ${env:HOSTNAME}
+    operators:
+      - type: key_value_parser
+        delimiter: "="
+        pair_delimiter: "\t"
+        timestamp:
+          parse_from: attributes.timestamp
+          layout_type: gotime
+          layout: '2006/01/02 15:04:05.999999999'
+
+processors:
+  attributes/app/loki:
+    actions:
+      - action: insert
+        key: loki.attribute.labels
+        value: H, host, application, service.name, service.namespace
+  attributes/app:
+    actions:
+      - action: insert
+        key: service.namespace
+        value: otelcontribcol-app
+
+service:
+  pipelines:
+    logs/client:
+      receivers: [filelog/client]
+      processors: [attributes/app, attributes/app/loki]
+      # exporters: [logging, loki]
+      exporters: [loki]

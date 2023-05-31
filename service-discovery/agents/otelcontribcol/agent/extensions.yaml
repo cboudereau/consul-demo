@@ -1,0 +1,11 @@
+extensions:
+  health_check:
+  pprof:
+  zpages:
+  file_storage/agent:
+    directory: /app/logstate/agent
+  file_storage/client:
+    directory: /app/logstate/client
+
+service:
+  extensions: [health_check, pprof, zpages, file_storage/agent, file_storage/client]
