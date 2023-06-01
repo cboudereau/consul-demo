@@ -12,6 +12,8 @@ receivers:
       - type: key_value_parser
         delimiter: "="
         pair_delimiter: "\t"
+        # send or drop pattern. Prefer drop with a dead letter queue (filter agent log with action="drop" and dedicated field to monitor dlq)
+        on_error: drop
         timestamp:
           parse_from: attributes.timestamp
           layout_type: gotime

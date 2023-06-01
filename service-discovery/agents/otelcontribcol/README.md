@@ -20,8 +20,16 @@ storage : https://github.com/open-telemetry/opentelemetry-collector-contrib/tree
 https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/troubleshooting.md
 https://grafana.com/docs/opentelemetry/collector/troubleshooting/?src=---------3------------------&pg=pricing&plcmt=pricing-calculator-pro&cta=start-free-trial
 
+## Transformation
+### Language
+https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/ottl/README.md
+
 ## Drop pattern
 https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/stanza/docs/types/on_error.md
+
+https://opentelemetry.io/docs/specs/otel/protocol/otlp/#failures
+
+Drop on parsing failure but filter error and action drop to support dead letter queue in loki for instance
 
 ## Monitoring
 https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/monitoring.md

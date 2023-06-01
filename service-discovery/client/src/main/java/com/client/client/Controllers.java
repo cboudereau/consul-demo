@@ -41,6 +41,7 @@ public class Controllers {
 		User user = client.getUser(hotel);
 		long ts = java.time.Instant.now().toEpochMilli();
 		customLogger.info("H={}\tT={}", hotel, timing);
+		customLogger.info("bad log");
 		return "Hello " + user.getName() + " " + user.getSurname() + " " + ts;
 	}
 
