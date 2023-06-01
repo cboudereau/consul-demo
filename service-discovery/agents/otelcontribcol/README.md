@@ -16,6 +16,12 @@ https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/pkg/
 
 storage : https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/storage/filestorage
 
+## Deployment
+
+Baby step : No Collector
+
+https://opentelemetry.io/docs/collector/deployment/
+
 ## Troubleshooting
 https://github.com/open-telemetry/opentelemetry-collector/blob/main/docs/troubleshooting.md
 https://grafana.com/docs/opentelemetry/collector/troubleshooting/?src=---------3------------------&pg=pricing&plcmt=pricing-calculator-pro&cta=start-free-trial
