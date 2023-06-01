@@ -47,7 +47,7 @@ processors:
         key: service.namespace
         value: otelcontribcol-agent
 
-  filter/ottl:
+  filter/drop:
     logs:
       log_record:
         - 'body.action == "drop"'
@@ -76,5 +76,5 @@ service:
 
     logs/drop:
       receivers: [filelog/agent]
-      processors: [filter/ottl, attributes/agent, attributes/drop/loki]
+      processors: [filter/drop, attributes/agent, attributes/drop/loki]
       exporters: [loki]
