@@ -60,7 +60,7 @@ service:
       level: info
       encoding: json
       output_paths: ["stdout", "otelcol.log.json"]
-      error_output_paths: ["stderr", "otelcol.error.log.json"]
+      # error_output_paths: ["stderr", "otelcol.error.log.json"]
 
   pipelines:
     metrics/agent:
