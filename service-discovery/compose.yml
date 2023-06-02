@@ -119,6 +119,11 @@ services:
     networks:
       - bridge
 
+  graphite:
+    image: graphiteapp/graphite-statsd
+    networks:
+      - bridge
+
   grafana:
     image: grafana/grafana-oss:9.5.2
     environment:

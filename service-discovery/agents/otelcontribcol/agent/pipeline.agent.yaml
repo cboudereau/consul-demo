@@ -67,7 +67,8 @@ service:
       receivers: [prometheus/agent, hostmetrics]
       processors: [attributes/agent]
       # exporters: [logging, otlphttp/mimir]
-      exporters: [otlphttp/mimir]
+      exporters: [carbon, otlphttp/mimir]
+
     logs/agent:
       receivers: [filelog/agent]
       processors: [attributes/agent, attributes/agent/loki]
