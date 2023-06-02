@@ -83,7 +83,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.2",
       "targets": [
         {
           "datasource": {
@@ -91,7 +91,7 @@
             "uid": "loki"
           },
           "editorMode": "builder",
-          "expr": "sum(rate({product=\"vector_drop\"} | json [$__interval]))",
+          "expr": "sum(rate({application=\"dead-letter-queue\"} | json [$__interval]))",
           "legendFormat": "{{metadata_dropped_component_id}}",
           "queryType": "range",
           "refId": "A"
@@ -129,7 +129,7 @@
             "uid": "loki"
           },
           "editorMode": "builder",
-          "expr": "{product=\"vector_drop\"} | json",
+          "expr": "{application=\"dead-letter-queue\"} | json",
           "queryType": "range",
           "refId": "A"
         }
@@ -182,7 +182,7 @@
         },
         "textMode": "auto"
       },
-      "pluginVersion": "9.4.7",
+      "pluginVersion": "9.5.2",
       "targets": [
         {
           "datasource": {
@@ -190,7 +190,7 @@
             "uid": "loki"
           },
           "editorMode": "builder",
-          "expr": "sum(rate({product=\"vector\"} | json | metadata_level = `ERROR` [$__interval]))",
+          "expr": "sum(rate({application=\"vector\"} | json | metadata_level = `ERROR` [$__interval]))",
           "legendFormat": "{{metadata_dropped_component_id}}",
           "queryType": "range",
           "refId": "A"
@@ -228,7 +228,7 @@
             "uid": "loki"
           },
           "editorMode": "builder",
-          "expr": "{product=\"vector\"} |= `` | json | metadata_level = `ERROR`",
+          "expr": "{application=\"vector\"} |= `` | json | metadata_level = `ERROR`",
           "queryType": "range",
           "refId": "A"
         }
@@ -12829,6 +12829,6 @@
   "timezone": "",
   "title": "Agent Monitoring",
   "uid": "NzDtFbMVz",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }

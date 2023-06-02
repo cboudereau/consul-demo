@@ -41,6 +41,7 @@ public class Controllers {
     User getUser(@RequestParam("id") Integer id) {
 		int timing = getRandom(100, 10000);
 		
+		customLogger.info("bad logs");
 		customLogger.info("H={}\tT={}", id, timing);
 		logger.info("/user has been called!");
 		return getSpringGuruUser();
