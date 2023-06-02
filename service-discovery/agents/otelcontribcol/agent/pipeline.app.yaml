@@ -6,7 +6,7 @@ receivers:
     storage: file_storage/client
     attributes:
       service.name: client
-      application: ${service.name}
+      application: client
       host: ${env:HOSTNAME}
     operators:
       - type: key_value_parser
@@ -20,6 +20,7 @@ receivers:
           layout: '2006/01/02 15:04:05.999999999'
 
 processors:
+  batch/app:
   attributes/app/loki:
     actions:
       - action: insert
@@ -35,6 +36,6 @@ service:
   pipelines:
     logs/client:
       receivers: [filelog/client]
-      processors: [attributes/app, attributes/app/loki]
+      processors: [batch/app, attributes/app, attributes/app/loki]
       # exporters: [logging, loki]
       exporters: [loki]

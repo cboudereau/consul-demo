@@ -20,32 +20,30 @@ receivers:
     storage: file_storage/agent
     attributes:
       service.name: agent
+      service.namespace: otelcontribcol
+      application: otelcontribcol-agent
       host: ${env:HOSTNAME}
     operators:
       - type: json_parser
+        parse_from:	body
+        parse_to: attributes
         severity: 
-          parse_from: attributes.level
+          parse_from: body.level
         timestamp:
-          parse_from: attributes.ts
+          parse_from: body.ts
           layout_type: epoch
           layout: 's.ns'
+      - type: remove
+        field: body
 
 processors:
+  batch/agent:
+
   attributes/agent/loki:
     actions:
       - action: insert
         key: loki.attribute.labels
-        value: service.namespace, service.name
-  attributes/drop/loki:
-    actions:
-      - action: insert
-        key: loki.attribute.labels
-        value: service.namespace, service.name, action
-  attributes/agent:
-    actions:
-      - action: insert
-        key: service.namespace
-        value: otelcontribcol-agent
+        value: service.namespace, service.name, level, application, action # action = "drop"
 
   filter/drop:
     logs:
@@ -65,17 +63,12 @@ service:
   pipelines:
     metrics/agent:
       receivers: [prometheus/agent, hostmetrics]
-      processors: [attributes/agent]
+      processors: [batch/agent]
       # exporters: [logging, otlphttp/mimir]
       exporters: [carbon, otlphttp/mimir]
 
     logs/agent:
       receivers: [filelog/agent]
-      processors: [attributes/agent, attributes/agent/loki]
+      processors: [batch/agent, attributes/agent/loki]
       # exporters: [logging, loki]
-      exporters: [loki]
-
-    logs/drop:
-      receivers: [filelog/agent]
-      processors: [filter/drop, attributes/agent, attributes/drop/loki]
       exporters: [loki]
