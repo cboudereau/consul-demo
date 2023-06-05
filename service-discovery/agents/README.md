@@ -1,4 +1,4 @@
-# Collecters/Exporters
+# Collector/Exporter
 
 ### Demo
 
