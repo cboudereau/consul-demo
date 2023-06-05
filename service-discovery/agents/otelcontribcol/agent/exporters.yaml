@@ -1,0 +1,22 @@
+exporters:
+  # file/no_rotation:
+  #   path: ./otel.out
+  # logging:
+  #   # https://github.com/open-telemetry/opentelemetry-collector/blob/80d704deb46021176c3fc408f63496773388f3b1/service/telemetry/config.go#L111
+  #   verbosity: detailed
+  loki:
+    endpoint: http://loki:3100/loki/api/v1/push
+  otlphttp/mimir:
+    endpoint: http://mimir:9009/otlp
+    # compression: none
+  # https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/carbonexporter
+  carbon:
+    # use endpoint to specify alternative destinations for the exporter,
+    # the default is localhost:2003
+    # endpoint: carbon:2003
+    endpoint: graphite:2003
+    # timeout is the maximum duration allowed to connecting and sending the
+    # data to the configured endpoint.
+    # The default is 5 seconds.
+    timeout: 10s
+  

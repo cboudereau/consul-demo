@@ -22,6 +22,18 @@
         </encoder>
     </appender>
 
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>log/client.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>timestamp=%d{yyyy/MM/dd HH:mm:ss.SSSSSSSSS}\t%msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="custom_logger" level="INFO">
+        <appender-ref ref="FILE" />
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="LOKI" />
         <appender-ref ref="CONSOLE" />

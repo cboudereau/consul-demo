@@ -8,6 +8,8 @@ import io.opentelemetry.instrumentation.annotations.WithSpan;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +17,9 @@ import org.slf4j.LoggerFactory;
 @RequiredArgsConstructor
 public class Controllers {
 	private static final Logger Logger = LoggerFactory.getLogger(Controllers.class);
+	private static final Random random = new Random(0);
+	private static final Logger customLogger = LoggerFactory.getLogger("custom_logger");
+
 	@Autowired
 	UsersServiceClient client;	
 
@@ -23,11 +28,20 @@ public class Controllers {
 		return "Greetings from Spring Boot!";
 	}
 
+	private static int getRandom(int min, int max) {
+		return random.nextInt(max - min + 1) + min;
+	}
+
 	@WithSpan
 	private String getHello() {
 		Logger.info("calling getUser");
-		User user = client.getUser();
+		int hotel = getRandom(1000, 1500); 
+		int timing = getRandom(100, 10000);
+
+		User user = client.getUser(hotel);
 		long ts = java.time.Instant.now().toEpochMilli();
+		customLogger.info("H={}\tT={}", hotel, timing);
+		customLogger.info("bad log");
 		return "Hello " + user.getName() + " " + user.getSurname() + " " + ts;
 	}
 

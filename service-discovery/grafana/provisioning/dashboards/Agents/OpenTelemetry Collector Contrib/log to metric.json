@@ -29,6 +29,43 @@
   "panels": [
     {
       "datasource": {
+        "type": "loki",
+        "uid": "loki"
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 3,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": true,
+        "showCommonLabels": true,
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "loki"
+          },
+          "editorMode": "builder",
+          "expr": "{exporter=\"OTLP\", application=\"client\"}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Raw",
+      "type": "logs"
+    },
+    {
+      "datasource": {
         "type": "prometheus",
         "uid": "mimir"
       },
@@ -81,25 +118,27 @@
               }
             ]
           },
-          "unit": "ms"
+          "unit": "short"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 15,
+        "w": 14,
         "x": 0,
-        "y": 0
+        "y": 8
       },
       "id": 2,
       "options": {
         "legend": {
           "calcs": [
-            "max"
+            "sum"
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "sortBy": "Total",
+          "sortDesc": true
         },
         "tooltip": {
           "mode": "single",
@@ -114,14 +153,14 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "topk(3, max by(hotel) (rate(service_total[$__rate_interval]) / rate(service_count[$__rate_interval])))",
+          "expr": "hotel_count",
           "instant": false,
-          "legendFormat": "__auto",
+          "legendFormat": "{{H}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Top 5 Hotels max response time",
+      "title": "Request Count by Hotel",
       "type": "timeseries"
     }
   ],
@@ -131,7 +170,7 @@
   "style": "dark",
   "tags": [
     "log-to-metric",
-    "vector"
+    "opentelemetry"
   ],
   "templating": {
     "list": []
@@ -143,7 +182,7 @@
   "timepicker": {},
   "timezone": "",
   "title": "Log 2 metric",
-  "uid": "eEZIy984z",
-  "version": 1,
+  "uid": "a462fb77-5214-4d46-89b9-a668294131ba",
+  "version": 3,
   "weekStart": ""
 }

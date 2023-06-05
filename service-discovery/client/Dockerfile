@@ -25,9 +25,10 @@ COPY src ./src
 RUN ./mvnw -o package
 
 FROM hashicorp/consul:${CONSUL_VERSION} as consul
+FROM otel/opentelemetry-collector-contrib:0.78.0 as otelcontribcol
 FROM ${DISTRO}
 
-RUN apk add --no-cache supervisor
+RUN apk add --no-cache supervisor jq
 
 ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
@@ -38,12 +39,17 @@ ARG OTEL_JAVA_AGENT_VERSION
 
 RUN adduser --no-create-home -u 1000 -D $APPLICATION_USER
 
+RUN mkdir -p /etc/otelcol-contrib && chown 1000:1000 /etc/otelcol-contrib
+
 USER 1000
 WORKDIR /app
+
+RUN mkdir -p /app/log /app/logstate/client /app/logstate/agent
 
 ADD --chown=1000:1000 https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/${OTEL_JAVA_AGENT_VERSION}/opentelemetry-javaagent.jar ./opentelemetry-javaagent.jar
 
 COPY --chown=1000:1000 --from=consul /bin/consul /app/consul
+COPY --chown=1000:1000 --from=otelcontribcol /otelcol-contrib /app/otelcol-contrib
 
 COPY --chown=1000:1000 ./supervisord.conf /app/supervisord.conf
 COPY --chown=1000:1000 ./supervisor.d/ /app/supervisor.d/
