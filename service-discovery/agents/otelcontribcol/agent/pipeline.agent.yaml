@@ -25,12 +25,12 @@ receivers:
       host: ${env:HOSTNAME}
     operators:
       - type: json_parser
-        parse_from:	body
-        parse_to: attributes
+    #     parse_from:	body
+    #     parse_to: attributes
         severity: 
-          parse_from: body.level
+          parse_from: attributes.level
         timestamp:
-          parse_from: body.ts
+          parse_from: attributes.ts
           layout_type: epoch
           layout: 's.ns'
       - type: remove
@@ -43,7 +43,7 @@ processors:
     actions:
       - action: insert
         key: loki.attribute.labels
-        value: service.namespace, service.name, level, application, action # action = "drop"
+        value: action, application, service.name, service.namespace, name
 
   filter/drop:
     logs:
@@ -64,11 +64,9 @@ service:
     metrics/agent:
       receivers: [prometheus/agent, hostmetrics]
       processors: [batch/agent]
-      # exporters: [logging, otlphttp/mimir]
       exporters: [carbon, otlphttp/mimir]
 
     logs/agent:
       receivers: [filelog/agent]
       processors: [batch/agent, attributes/agent/loki]
-      # exporters: [logging, loki]
       exporters: [loki]

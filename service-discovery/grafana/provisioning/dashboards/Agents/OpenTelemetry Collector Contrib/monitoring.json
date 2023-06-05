@@ -70,105 +70,6 @@
         "x": 0,
         "y": 1
       },
-      "id": 49,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "9.5.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "builder",
-          "expr": "sum(rate({application=\"otelcontribcol-agent\", action=\"drop\"} | json | level = `error` [$__interval]))",
-          "legendFormat": "{{metadata_dropped_component_id}}",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Dropped logs ($__interval)",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 19,
-        "x": 5,
-        "y": 1
-      },
-      "id": 48,
-      "options": {
-        "dedupStrategy": "none",
-        "enableLogDetails": true,
-        "prettifyLogMessage": true,
-        "showCommonLabels": true,
-        "showLabels": true,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": false
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "loki"
-          },
-          "editorMode": "builder",
-          "expr": "{application=\"otelcontribcol-agent\", level=\"error\", action=\"drop\"} |= ``",
-          "queryType": "range",
-          "refId": "A"
-        }
-      ],
-      "title": "Dropped logs",
-      "type": "logs"
-    },
-    {
-      "datasource": {
-        "type": "loki",
-        "uid": "loki"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              }
-            ]
-          },
-          "unit": "reqps"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 5,
-        "x": 0,
-        "y": 8
-      },
       "id": 50,
       "options": {
         "colorMode": "value",
@@ -210,7 +111,7 @@
         "h": 7,
         "w": 19,
         "x": 5,
-        "y": 8
+        "y": 1
       },
       "id": 51,
       "options": {
@@ -248,7 +149,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 8
       },
       "id": 23,
       "panels": [],
@@ -345,7 +246,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 16
+        "y": 9
       },
       "id": 28,
       "interval": "",
@@ -480,7 +381,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 16
+        "y": 9
       },
       "id": 32,
       "interval": "",
@@ -544,7 +445,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 25
+        "y": 18
       },
       "id": 34,
       "panels": [],
@@ -608,7 +509,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -655,7 +557,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 26
+        "y": 19
       },
       "id": 35,
       "interval": "",
@@ -771,7 +673,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -818,7 +721,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 26
+        "y": 19
       },
       "id": 36,
       "interval": "",
@@ -885,7 +788,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 28
       },
       "id": 25,
       "panels": [],
@@ -949,7 +852,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -965,7 +869,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 29
       },
       "id": 37,
       "interval": "",
@@ -1067,7 +971,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1083,7 +988,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 36
+        "y": 29
       },
       "id": 38,
       "interval": "",
@@ -1183,7 +1088,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1199,7 +1105,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 45
+        "y": 38
       },
       "id": 10,
       "links": [],
@@ -1286,7 +1192,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1333,7 +1240,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 45
+        "y": 38
       },
       "id": 46,
       "interval": "",
@@ -1384,7 +1291,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 47
       },
       "id": 21,
       "panels": [],
@@ -1448,7 +1355,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1558,7 +1466,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 55
+        "y": 48
       },
       "id": 39,
       "interval": "",
@@ -1675,7 +1583,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1761,7 +1670,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 55
+        "y": 48
       },
       "id": 40,
       "interval": "",
@@ -1877,7 +1786,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1893,7 +1803,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 64
+        "y": 57
       },
       "id": 41,
       "interval": "",
@@ -1945,7 +1855,7 @@
         "h": 3,
         "w": 24,
         "x": 0,
-        "y": 73
+        "y": 66
       },
       "id": 45,
       "isNew": true,
@@ -2141,7 +2051,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
