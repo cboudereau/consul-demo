@@ -29,7 +29,7 @@ Vector and OpenTelemetry Collector can be both used to have the maximum benefits
 |||mtail|vector|promtail/grafana agent|otelcontribcol|
 |-|-|-|-|-|-|
 ||Total|28|111|41|107|
-|Editor|Google|Datadog|Grafana|Opentelemetry|
+||Editor|Google|Datadog|Grafana|Opentelemetry|
 |Delivery|Delivery 1 - Best effort 13 - At least once|1|13|5|8|
 |Exporter method|(13) Push|13|13|5|13|
 |Source|(5) File Source|1|5|3|5|
