@@ -19,7 +19,7 @@ Vector is best at pipeline transformation like log to metric transformation / ag
 
 OpenTelemetry Collector Contrib is fully compliant with OTLP but the transformation pipeline is not as mature as vector.dev. Otelcol-contrib does not support a true disk buffering like vector but implements a file receiver and exporter which can act as a gateway between cluser/VPC. Buffering and Pipeline transformation (connectors) are tracked in the project though. It supports [Tail sampling processor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/tailsamplingprocessor#tail-sampling-processor) which can reduce the number of traces in order to keep only traces having performance issues.
 
-Vector is higly recommended for log 2 metric without tracing support while OpenTelemetry Collector is recommended for pure 1:1 observability.
+Vector is highly recommended for log 2 metric without tracing support while OpenTelemetry Collector is recommended for pure 1:1 observability.
 
 Vector and OpenTelemetry Collector can be both used to have the maximum benefits. Vector should be used only for logs and metrics as an agent/aggregator on client side for legacy app support when refactoring to metric cannot be done at once or on time. On the backend side, vector can forward to an OpenTelemetry Collector agent/aggregator.
 
