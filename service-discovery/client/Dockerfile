@@ -28,7 +28,7 @@ FROM hashicorp/consul:${CONSUL_VERSION} as consul
 FROM otel/opentelemetry-collector-contrib:0.78.0 as otelcontribcol
 FROM ${DISTRO}
 
-RUN apk add --no-cache supervisor
+RUN apk add --no-cache supervisor jq
 
 ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
