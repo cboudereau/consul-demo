@@ -1,5 +1,19 @@
 # Collecters/Exporters
 
+### Demo
+
+```bash
+./up.sh
+```
+
+grafana is available at http://localhost:3000
+
+``client`` java app embeds ``otelcol-contrib`` as an agent and tranforms log to counter.
+
+``otelcol-contrib`` has been configured to export its own metrics, logs and host metrics integrated into grafana dashboard.
+
+``service`` java app embeds ``vector`` has an agent and transforms log to counter and sum. It has been configured to export its own metrics, logs and host metrics integrated into 2 grafana dashboards. The hostmetric source is compatible with ``node exporter`` dashboard with small changes.
+
 ### Conclusion
 Vector is best at pipeline transformation like log to metric transformation / aggregation while it does not support nor full OTLP and traces. Vector uses its own protocol which can conflict with OTLP (ie: OTLP trace). Vector supports also a better disk buffer implementation to offer a maximum decoupling guarantee on performance issue or failure.
 
@@ -10,14 +24,6 @@ Vector is higly recommended for log 2 metric without tracing support while OpenT
 Vector and OpenTelemetry Collector can be both used to have the maximum benefits. Vector should be used only for logs and metrics as an agent/aggregator on client side for legacy app support when refactoring to metric cannot be done at once or on time. On the backend side, vector can forward to an OpenTelemetry Collector agent/aggregator.
 
 ## Benchmark
-
-### Demo
-
-``client`` java app embeds ``otelcol-contrib`` as an agent and tranforms log to counter.
-
-``otelcol-contrib`` has been configured to export its own metrics, logs and host metrics integrated into grafana dashboard.
-
-``service`` java app embeds ``vector`` has an agent and transforms log to counter and sum. It has been configured to export its own metrics, logs and host metrics integrated into 2 grafana dashboards. The hostmetric source is compatible with ``node exporter`` dashboard with small changes.
 
 ### Table
 |||mtail|vector|promtail/grafana agent|otelcontribcol|
