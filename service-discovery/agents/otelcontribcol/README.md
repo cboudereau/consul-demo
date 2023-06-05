@@ -1,5 +1,8 @@
 # otelcontribcol
 
+## datamodel
+https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/metrics/data-model.md#gauge
+
 ## Getting started
 
 https://opentelemetry.io/docs/collector/getting-started/
@@ -23,6 +26,9 @@ Baby step : No Collector
 https://opentelemetry.io/docs/collector/deployment/
 
 ## Log to metric
+
+:warning: only counter is implemented at the time of writing (very limited usage)
+
 https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/connector/countconnector
 
 ## Troubleshooting
