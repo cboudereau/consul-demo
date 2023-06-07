@@ -52,6 +52,7 @@ services:
       - bridge
     volumes:
       - ./agents/otelcontribcol/agent/:/etc/otelcol-contrib/:ro
+      - logstash:/app/logstash:rw
     environment:
       # TODO set -log-level info instead of error when consul agent will be fixed https://developer.hashicorp.com/consul/docs/upgrading/upgrade-specific#deprecating-authentication-via-token-query-parameter
       - CONSUL_ARGS=-log-level error -log-json -retry-join consul-server
@@ -94,6 +95,13 @@ services:
       - 9090:9090
     depends_on:
       - consul-server
+
+  logstash:
+    build:
+      context: ./logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline/:ro
+      - logstash:/tmp/logstash-input:ro
 
   loki:
     image: grafana/loki:2.8.2
@@ -144,3 +152,6 @@ services:
 
 networks:
   bridge:
+
+volumes:
+  logstash:

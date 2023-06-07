@@ -51,7 +51,7 @@ service:
     logs/client:
       receivers: [filelog/client]
       processors: [batch/app, attributes/app/loki]
-      exporters: [loki]
+      exporters: [loki, file/logstash]
 
     logs/client-metrics:
       receivers: [filelog/client]
