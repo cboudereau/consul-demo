@@ -18,12 +18,14 @@ public class Controllers {
 	private static final Logger logger = LoggerFactory.getLogger(Controllers.class);
 	private static final Logger customLogger = LoggerFactory.getLogger("custom_logger");
 	private static final Random random = new Random(0);
+
 	@Value
-    static class User {
+	static class User {
 		public User(final String name, final String surname) {
 			this.name = name;
 			this.surname = surname;
 		}
+
 		String name;
 		String surname;
 	}
@@ -37,10 +39,12 @@ public class Controllers {
 		return random.nextInt(max - min + 1) + min;
 	}
 
-	@GetMapping(path="/user")
-    User getUser(@RequestParam("id") Integer id) {
+	@GetMapping(path = "/user")
+	User getUser(@RequestParam("id") Integer id) {
+		// error prone will fail on the next line due to unbound returned value check CheckReturnValue at package level
+		getRandom(1, 2);
 		int timing = getRandom(100, 10000);
-		
+
 		customLogger.info("bad logs");
 		customLogger.info("H={}\tT={}", id, timing);
 		logger.info("/user has been called!");
