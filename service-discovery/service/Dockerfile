@@ -1,6 +1,7 @@
 ARG CONSUL_VERSION
 ARG JDK_IMAGE
 ARG DISTRO
+ARG VECTOR_VERSION
 
 FROM ${JDK_IMAGE} as jdk
 # required for strip-debug to work
@@ -25,7 +26,7 @@ COPY src ./src
 RUN ./mvnw -o package
 
 FROM hashicorp/consul:${CONSUL_VERSION} as consul
-FROM timberio/vector:0.29.1-alpine as vector
+FROM timberio/vector:${VECTOR_VERSION} as vector
 FROM ${DISTRO}
 
 RUN apk add --no-cache supervisor

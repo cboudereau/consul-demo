@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <java.version>17</java.version>
-        <micrometer.version>1.11.0</micrometer.version>
+        <micrometer.version>1.11.4</micrometer.version>
     </properties>
 
     <parent>
@@ -48,19 +48,13 @@
         <dependency>
             <groupId>com.github.loki4j</groupId>
             <artifactId>loki-logback-appender</artifactId>
-            <version>1.4.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.opentelemetry.instrumentation</groupId>
-            <artifactId>opentelemetry-logback-1.0</artifactId>
-            <version>1.9.2-alpha</version>
+            <version>1.4.2</version>
         </dependency>
 
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-instrumentation-annotations</artifactId>
-            <version>1.26.0</version>
+            <version>1.30.0</version>
         </dependency>
 
         <dependency>

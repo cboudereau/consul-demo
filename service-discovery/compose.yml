@@ -20,6 +20,7 @@ services:
         - JDK_IMAGE=${JDK_IMAGE}
         - DISTRO=${DISTRO}
         - OTEL_JAVA_AGENT_VERSION=${OTEL_JAVA_AGENT_VERSION}
+        - VECTOR_VERSION=${VECTOR_VERSION}
     deploy:
       replicas: 4
     networks:
@@ -48,6 +49,7 @@ services:
         - JDK_IMAGE=${JDK_IMAGE}
         - DISTRO=${DISTRO}
         - OTEL_JAVA_AGENT_VERSION=${OTEL_JAVA_AGENT_VERSION}
+        - OTEL_CONTRIB_COL=${OTEL_CONTRIB_COL}
     networks:
       - bridge
     volumes:
@@ -70,7 +72,7 @@ services:
       - service
 
   curl:
-    image: curlimages/curl:8.1.2
+    image: curlimages/curl:8.3.0
     networks:
       - bridge
     entrypoint: sh -c "watch -n 0.5 -d -- curl http://client:8080/hello 2>&1 > /dev/null"
@@ -96,7 +98,7 @@ services:
       - consul-server
 
   loki:
-    image: grafana/loki:2.8.2
+    image: grafana/loki:2.9.1
     command: -config.file=/etc/loki/local-config.yaml -validation.reject-old-samples=false -query-scheduler.max-outstanding-requests-per-tenant=2048 -querier.max-outstanding-requests-per-tenant=2048
     volumes:
       - ./loki/:/etc/loki/:ro
@@ -104,7 +106,7 @@ services:
       - bridge
 
   mimir:
-    image: grafana/mimir:2.8.0
+    image: grafana/mimir:2.10.0
     volumes:
       - ./mimir/mimir.yaml:/etc/mimir.yaml
     command: --config.file=/etc/mimir.yaml
@@ -112,7 +114,7 @@ services:
       - bridge
 
   tempo:
-    image: grafana/tempo:2.1.1
+    image: grafana/tempo:2.2.3
     volumes:
       - ./tempo/tempo-local.yaml:/etc/tempo.yaml:ro
     command: [ "-config.file=/etc/tempo.yaml" ]
@@ -125,7 +127,7 @@ services:
       - bridge
 
   grafana:
-    image: grafana/grafana-oss:9.5.2
+    image: grafana/grafana-oss:10.1.2
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
