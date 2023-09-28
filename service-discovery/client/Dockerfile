@@ -1,6 +1,7 @@
 ARG CONSUL_VERSION
 ARG JDK_IMAGE
 ARG DISTRO
+ARG OTEL_CONTRIB_COL
 
 FROM ${JDK_IMAGE} as jdk
 # required for strip-debug to work
@@ -25,7 +26,7 @@ COPY src ./src
 RUN ./mvnw -o package
 
 FROM hashicorp/consul:${CONSUL_VERSION} as consul
-FROM otel/opentelemetry-collector-contrib:0.78.0 as otelcontribcol
+FROM otel/opentelemetry-collector-contrib:${OTEL_CONTRIB_COL} as otelcontribcol
 FROM ${DISTRO}
 
 RUN apk add --no-cache supervisor jq
