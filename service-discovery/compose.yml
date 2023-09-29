@@ -44,6 +44,7 @@ services:
   client:
     build:
       context: ./client
+      dockerfile: native.Dockerfile
       args:
         - CONSUL_VERSION=${CONSUL_VERSION}
         - JDK_IMAGE=${JDK_IMAGE}

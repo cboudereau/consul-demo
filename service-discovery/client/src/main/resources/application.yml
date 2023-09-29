@@ -13,6 +13,10 @@ spring:
         query-passing: true
         prefer-ip-address: false
         tags: prometheus
+otel:
+  traces: 
+    sampler:
+      probability: 0.1
 management:
 
   otlp:
