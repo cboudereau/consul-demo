@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "users-service", path = "/user")
 public interface UsersServiceClient {
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     User getUser(@RequestParam(value = "id") Integer id);
 }
