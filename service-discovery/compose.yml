@@ -72,7 +72,7 @@ services:
       - service
 
   curl:
-    image: curlimages/curl:8.3.0
+    image: curlimages/curl:8.4.0
     networks:
       - bridge
     entrypoint: sh -c "watch -n 0.5 -d -- curl http://client:8080/hello 2>&1 > /dev/null"
@@ -98,7 +98,7 @@ services:
       - consul-server
 
   loki:
-    image: grafana/loki:2.9.1
+    image: grafana/loki:2.9.2
     command: -config.file=/etc/loki/local-config.yaml -validation.reject-old-samples=false -query-scheduler.max-outstanding-requests-per-tenant=2048 -querier.max-outstanding-requests-per-tenant=2048
     volumes:
       - ./loki/:/etc/loki/:ro
@@ -106,7 +106,7 @@ services:
       - bridge
 
   mimir:
-    image: grafana/mimir:2.10.0
+    image: grafana/mimir:2.10.3
     volumes:
       - ./mimir/mimir.yaml:/etc/mimir.yaml
     command: --config.file=/etc/mimir.yaml
@@ -114,7 +114,7 @@ services:
       - bridge
 
   tempo:
-    image: grafana/tempo:2.2.3
+    image: grafana/tempo:2.3.0
     volumes:
       - ./tempo/tempo-local.yaml:/etc/tempo.yaml:ro
     command: [ "-config.file=/etc/tempo.yaml" ]
@@ -122,12 +122,12 @@ services:
       - bridge
 
   graphite:
-    image: graphiteapp/graphite-statsd:1.1.10-4
+    image: graphiteapp/graphite-statsd:1.1.10-5
     networks:
       - bridge
 
   grafana:
-    image: grafana/grafana-oss:10.1.2
+    image: grafana/grafana-oss:10.1.5
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin

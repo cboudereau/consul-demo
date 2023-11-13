@@ -45,11 +45,6 @@ processors:
         key: loki.attribute.labels
         value: action, application, service.name, service.namespace, name
 
-  filter/drop:
-    logs:
-      log_record:
-        - 'body.action == "drop"'
-
 service:
   telemetry:
     metrics:
